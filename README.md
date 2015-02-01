@@ -3,8 +3,13 @@ ObjectPool
 
 This provides an ObjectPool factory, for providing two different types of object pools. Safe and unsafe.
 
-The main distinction between this pool and others, is speed and compatibility. The faster implementation,
-UNSAFE, is used unless unavailable (ie: android), in which case a LinkedBlockingDeque is used.
+The main distinction between this pool and others, is speed and compatibility. The factory offers two
+implementations:
+- https://github.com/ashkrit/blog/tree/master/FastObjectPool
+- https://code.google.com/p/furious-objectpool
+
+The faster implementation uses UNSAFE, which is unavailable on android and non-oracle JVMs, in which case the
+fallback pool is used, which is based on a LinkedBlockingDeque.
 
 - This is for cross-platform use, specifically - linux 32/64, mac 32/64, and windows 32/64. Java 6+
 
