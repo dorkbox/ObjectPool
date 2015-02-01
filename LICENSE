@@ -1,0 +1,15 @@
+    - Dorkbox ObjectPool - Apache 2.0 License
+      https://github.com/dorkbox
+      Copyright 2014, dorkbox, llc
+        Fast (via unsafe) and compatible java object pool factory
+
+
+    - FastObjectPool - Apache 2.0 License
+      http://ashkrit.blogspot.com/2013/05/lock-less-java-object-pool.html
+      https://github.com/ashkrit/blog/tree/master/FastObjectPool
+      Copyright 2013, Ashkrit
+
+
+    - Furious ObjectPool - Apache 2.0 License
+      https://code.google.com/p/furious-objectpool/
+      Copyright Eddie Raapoto, 2012
