@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.objectPool;
+package dorkbox.util.objectPool;
 
-public interface ObjectPool<T> {
-   /**
-    * Takes an object from the pool
-    */
-    public ObjectPoolHolder<T> take();
-
-   /**
-    * Return object to the pool
-    */
-    public void release(ObjectPoolHolder<T> object);
+public interface PoolableObject<T> {
+    /**
+     * called when a new instance is created
+     */
+    public T create();
 }

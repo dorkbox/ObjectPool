@@ -17,7 +17,7 @@
  *
  * Modified by dorkbox, llc
  */
-package dorkbox.objectPool;
+package dorkbox.util.objectPool;
 
 import java.security.AccessController;
 import java.util.concurrent.locks.ReentrantLock;

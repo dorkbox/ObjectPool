@@ -16,7 +16,7 @@
  *
  * Modified by dorkbox, llc
  */
-package dorkbox.objectPool;
+package dorkbox.util.objectPool;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
