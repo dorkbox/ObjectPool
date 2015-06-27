@@ -15,9 +15,10 @@
  */
 package dorkbox.util.objectPool;
 
-public interface PoolableObject<T> {
+public
+interface PoolableObject<T> {
     /**
      * called when a new instance is created
      */
-    public T create();
+    T create();
 }

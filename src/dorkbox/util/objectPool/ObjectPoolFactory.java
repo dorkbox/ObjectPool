@@ -16,15 +16,18 @@
 package dorkbox.util.objectPool;
 
 
-public class ObjectPoolFactory {
+public
+class ObjectPoolFactory {
 
-    private ObjectPoolFactory() {
+    private
+    ObjectPoolFactory() {
     }
 
     /**
      * Creates a pool of the specified size
      */
-    public static <T> ObjectPool<T> create(PoolableObject<T> poolableObject, int size) {
+    public static
+    <T> ObjectPool<T> create(PoolableObject<T> poolableObject, int size) {
         try {
             // here we use FAST (via UNSAFE)
             UnsafeObjectPool<T> fastObjectPool = new UnsafeObjectPool<T>(poolableObject, size);

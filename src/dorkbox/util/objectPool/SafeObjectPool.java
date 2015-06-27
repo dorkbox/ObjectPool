@@ -18,63 +18,39 @@
  */
 package dorkbox.util.objectPool;
 
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ArrayBlockingQueue;
 
 
 class SafeObjectPool<T> implements ObjectPool<T> {
 
-    private static final boolean FREE = true;
-    private static final boolean USED = false;
-
-
-    private final LinkedBlockingDeque<ObjectPoolHolder<T>> queue;
-
-    private ThreadLocal<ObjectPoolHolder<T>> localValue = new ThreadLocal<>();
+    private final ArrayBlockingQueue<T> queue;
+    private final PoolableObject<T> poolableObject;
 
     SafeObjectPool(PoolableObject<T> poolableObject, int size) {
+        this.poolableObject = poolableObject;
 
-        this.queue = new LinkedBlockingDeque<ObjectPoolHolder<T>>(size);
+        this.queue = new ArrayBlockingQueue<T>(size);
 
-        for (int x=0;x<size;x++) {
-            this.queue.add(new ObjectPoolHolder<T>(poolableObject.create()));
+        for (int x = 0; x < size; x++) {
+            this.queue.add(poolableObject.create());
         }
     }
 
     @Override
-    public ObjectPoolHolder<T> take() {
-        // if we have an object available in the cache, use it instead.
-        ObjectPoolHolder<T> localObject = this.localValue.get();
-        if (localObject != null) {
-            if (localObject.state.compareAndSet(FREE, USED)) {
-                return localObject;
-            }
-        }
-
-        ObjectPoolHolder<T> holder = this.queue.poll();
-
-        if (holder == null) {
-            return null;
-        }
-
-        // the use of a threadlocal reference here helps eliminates contention. This also checks OTHER threads,
-        // as they might have one sitting on the cache
-        if (holder.state.compareAndSet(FREE, USED)) {
-            this.localValue.set(holder);
-            return holder;
-        } else {
-            // put it back into the queue
-            this.queue.offer(holder);
-            return null;
-        }
+    public
+    T take() throws InterruptedException {
+        return this.queue.take();
     }
 
     @Override
-    public void release(ObjectPoolHolder<T> object) {
-        if (object.state.compareAndSet(USED, FREE)) {
-            this.queue.offer(object);
-        }
-        else {
-            throw new IllegalArgumentException("Invalid reference passed");
-        }
+    public
+    void release(T object) {
+        this.queue.offer(object);
+    }
+
+    @Override
+    public
+    T newInstance() {
+        return poolableObject.create();
     }
 }

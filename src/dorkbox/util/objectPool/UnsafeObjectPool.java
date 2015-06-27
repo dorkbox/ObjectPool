@@ -19,112 +19,74 @@
  */
 package dorkbox.util.objectPool;
 
-import java.security.AccessController;
+import org.jctools.queues.MpmcArrayQueue;
+import org.jctools.util.Pow2;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
 class UnsafeObjectPool<T> implements ObjectPool<T> {
+    private final MpmcArrayQueue<T> objects;
 
-    private final sun.misc.Unsafe unsafe;
+    private final Lock lock = new ReentrantLock();
+    private final Condition empty = lock.newCondition();
+    private final PoolableObject<T> poolableObject;
 
-    private static final boolean FREE = true;
-    private static final boolean USED = false;
+    UnsafeObjectPool(final PoolableObject<T> poolableObject, final int size) throws Throwable {
+        this.poolableObject = poolableObject;
+        int newSize = Pow2.roundToPowerOfTwo(size);
+        objects = new MpmcArrayQueue(newSize);
 
-    private final ObjectPoolHolder<T>[] objects;
-
-    private volatile int takePointer;
-    private volatile int releasePointer;
-
-    private final int mask;
-    private final long BASE;
-    private final long INDEXSCALE;
-    private final long ASHIFT;
-
-    public ReentrantLock lock = new ReentrantLock();
-    private ThreadLocal<ObjectPoolHolder<T>> localValue = new ThreadLocal<>();
-
-    UnsafeObjectPool(PoolableObject<T> poolableObject, int size) throws Throwable {
-        this.unsafe = AccessController.doPrivileged(new GetUnsafe());
-
-        if (this.unsafe == null) {
-            throw new Exception("Unable to load unsafe");
+        for (int x = 0; x < newSize; x++) {
+            objects.offer(poolableObject.create());
         }
-
-        int newSize = 1;
-        while (newSize < size) {
-            newSize = newSize << 1;
-        }
-
-        size = newSize;
-
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        ObjectPoolHolder<T>[] stuff = new ObjectPoolHolder[size];
-        this.objects = stuff;
-
-        for (int x=0;x<size;x++) {
-            this.objects[x] = new ObjectPoolHolder<T>(poolableObject.create());
-        }
-
-        this.mask = size-1;
-        this.releasePointer = size;
-        this.BASE = this.unsafe.arrayBaseOffset(ObjectPoolHolder[].class);
-        this.INDEXSCALE = this.unsafe.arrayIndexScale(ObjectPoolHolder[].class);
-        this.ASHIFT = 31 - Integer.numberOfLeadingZeros((int) this.INDEXSCALE);
     }
 
     @Override
-    public ObjectPoolHolder<T> take() {
-        int localTakePointer;
-
-        // if we have an object available in the cache, use it instead.
-        ObjectPoolHolder<T> localObject = this.localValue.get();
-        if (localObject != null) {
-            if (localObject.state.compareAndSet(FREE, USED)) {
-                return localObject;
+    public
+    T take() throws InterruptedException {
+        T poll = objects.poll();
+        if (poll == null) {
+            lock.lock();
+            try {
+                while ((poll = objects.poll()) == null) {
+                    empty.await();
+                }
+            } finally {
+                lock.unlock();
             }
         }
 
-        sun.misc.Unsafe unsafe = this.unsafe;
+        return poll;
+    }
 
-        while (this.releasePointer != (localTakePointer=this.takePointer)) {
-            int index = localTakePointer & this.mask;
+    @Override
+    public
+    void release(T object) {
+        boolean waiting = objects.peek() == null;
 
-            ObjectPoolHolder<T> holder = this.objects[index];
-            //if(holder!=null && THE_UNSAFE.compareAndSwapObject(objects, (index*INDEXSCALE)+BASE, holder, null))
-            if (holder != null && unsafe.compareAndSwapObject(this.objects, (index<<this.ASHIFT)+this.BASE, holder, null)) {
-                this.takePointer = localTakePointer+1;
+        if (!objects.offer(object)) {
+            throw new RuntimeException("Unable to insert item " + object.getClass() + " into pool. take/release calls MUST be symmetric!");
+        }
 
-                // the use of a threadlocal reference here helps eliminates contention. This also checks OTHER threads,
-                // as they might have one sitting on the cache
-                if (holder.state.compareAndSet(FREE, USED)) {
-                    this.localValue.set(holder);
-                    return holder;
+        if (waiting) {
+            lock.lock();
+            if (objects.peek() == null) {
+                try {
+                    // we only need to signal one, since the take/release calls must be symmetric
+                    empty.signal();
+                } finally {
+                    lock.unlock();
                 }
             }
         }
-        return null;
     }
 
     @Override
-    public void release(ObjectPoolHolder<T> object) {
-        try {
-            this.lock.lockInterruptibly();
-
-            int localValue = this.releasePointer;
-            //long index = ((localValue & mask) * INDEXSCALE ) + BASE;
-            long index = ((localValue & this.mask)<<this.ASHIFT ) + this.BASE;
-
-            if (object.state.compareAndSet(USED, FREE)) {
-                this.unsafe.putOrderedObject(this.objects, index, object);
-                this.releasePointer = localValue+1;
-            }
-            else {
-                throw new IllegalArgumentException("Invalid reference passed");
-            }
-        } catch (InterruptedException e) {
-        }
-        finally {
-            this.lock.unlock();
-        }
+    public
+    T newInstance() {
+        return poolableObject.create();
     }
 }

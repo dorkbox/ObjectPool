@@ -15,14 +15,20 @@
  */
 package dorkbox.util.objectPool;
 
-public interface ObjectPool<T> {
-   /**
-    * Takes an object from the pool
-    */
-    public ObjectPoolHolder<T> take();
+public
+interface ObjectPool<T> {
+    /**
+     * Takes an object from the pool
+     */
+    T take() throws InterruptedException;
 
-   /**
-    * Return object to the pool
-    */
-    public void release(ObjectPoolHolder<T> object);
+    /**
+     * Return object to the pool
+     */
+    void release(T object);
+
+    /**
+     * @return a new object instance created by the pool.
+     */
+    T newInstance();
 }
