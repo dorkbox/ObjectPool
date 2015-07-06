@@ -37,7 +37,7 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
     UnsafeObjectPool(final PoolableObject<T> poolableObject, final int size) throws Throwable {
         this.poolableObject = poolableObject;
         int newSize = Pow2.roundToPowerOfTwo(size);
-        objects = new MpmcArrayQueue(newSize);
+        objects = new MpmcArrayQueue<T>(newSize);
 
         for (int x = 0; x < newSize; x++) {
             objects.offer(poolableObject.create());
