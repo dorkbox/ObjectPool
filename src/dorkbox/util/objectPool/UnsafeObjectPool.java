@@ -28,6 +28,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 class UnsafeObjectPool<T> implements ObjectPool<T> {
+    public static final int FULL_RETRY_LIMIT = 200;
+
     private final MpmcArrayQueue<T> objects;
 
     private final Lock lock = new ReentrantLock();
@@ -77,19 +79,27 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
     void release(T object) {
         boolean waiting = objects.peek() == null;
 
+        // This could potentially happen due to optimistic calculations by the implementation queue.
         if (!objects.offer(object)) {
-            throw new RuntimeException("Unable to insert item " + object.getClass() + " into pool. take/release calls MUST be symmetric!");
+            int limit = FULL_RETRY_LIMIT;
+            while (!objects.offer(object) && limit-- > 0) {
+                Thread.yield();
+            }
+
+            if (limit <= 0) {
+                throw new RuntimeException("Unable to insert item into object pool. Pool is full, and retry limit exceeded.");
+            }
         }
 
         if (waiting) {
             lock.lock();
-            if (objects.peek() == null) {
-                try {
+            try {
+                if (objects.peek() == null) {
                     // we only need to signal one, since the take/release calls must be symmetric
                     empty.signal();
-                } finally {
-                    lock.unlock();
                 }
+            } finally {
+                lock.unlock();
             }
         }
     }
