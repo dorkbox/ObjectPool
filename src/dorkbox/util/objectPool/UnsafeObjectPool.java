@@ -64,6 +64,16 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
 
     @Override
     public
+    T takeUninterruptibly() {
+        try {
+            return take();
+        } catch (InterruptedException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public
     void release(T object) {
         boolean waiting = objects.peek() == null;
 

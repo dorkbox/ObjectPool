@@ -15,15 +15,24 @@
  */
 package dorkbox.util.objectPool;
 
+@SuppressWarnings("ALL")
 public
 interface ObjectPool<T> {
     /**
-     * Takes an object from the pool
+     * Takes an object from the pool, Blocks until an item is available in the pool.
      */
     T take() throws InterruptedException;
 
     /**
-     * Return object to the pool
+     * Takes an object from the pool, Blocks until an item is available in the pool.
+     * <p/>
+     * This method catches an
+     * {@link InterruptedException} and discards it silently.
+     */
+    T takeUninterruptibly();
+
+    /**
+     * Return object to the pool, waking those that have blocked during take()
      */
     void release(T object);
 
