@@ -80,6 +80,7 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
         boolean waiting = objects.peek() == null;
 
         // This could potentially happen due to optimistic calculations by the implementation queue.
+        // From my observations, 1 retry was all that was needed.
         if (!objects.offer(object)) {
             int limit = FULL_RETRY_LIMIT;
             while (!objects.offer(object) && limit-- > 0) {
