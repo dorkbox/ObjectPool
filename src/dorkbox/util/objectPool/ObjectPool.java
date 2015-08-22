@@ -26,13 +26,12 @@ interface ObjectPool<T> {
     /**
      * Takes an object from the pool, Blocks until an item is available in the pool.
      * <p/>
-     * This method catches an
-     * {@link InterruptedException} and discards it silently.
+     * This method catches {@link InterruptedException} and discards it silently.
      */
     T takeUninterruptibly();
 
     /**
-     * Return object to the pool, waking those that have blocked during take()
+     * Return object to the pool, waking those threads that have blocked during take()
      */
     void release(T object);
 
@@ -40,4 +39,9 @@ interface ObjectPool<T> {
      * @return a new object instance created by the pool.
      */
     T newInstance();
+
+    /**
+     * @return the number of pooled objects
+     */
+    int size();
 }

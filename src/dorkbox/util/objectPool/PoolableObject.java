@@ -16,9 +16,20 @@
 package dorkbox.util.objectPool;
 
 public
-interface PoolableObject<T> {
+abstract class PoolableObject<T> {
+
+    /**
+     * Called when an object is returned to the pool, useful for resetting an objects state, for example.
+     * @param object
+     */
+    @SuppressWarnings("UnusedParameters")
+    public
+    void reset(T object) {
+    }
+
+
     /**
      * called when a new instance is created
      */
-    T create();
+    public abstract T create();
 }

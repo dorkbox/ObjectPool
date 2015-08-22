@@ -32,7 +32,9 @@ class SafeObjectPool<T> implements ObjectPool<T> {
         this.queue = new ArrayBlockingQueue<T>(size);
 
         for (int x = 0; x < size; x++) {
-            this.queue.add(poolableObject.create());
+            T e = poolableObject.create();
+            poolableObject.reset(e);
+            this.queue.add(e);
         }
     }
 
@@ -55,6 +57,7 @@ class SafeObjectPool<T> implements ObjectPool<T> {
     @Override
     public
     void release(T object) {
+        poolableObject.reset(object);
         this.queue.offer(object);
     }
 
@@ -62,5 +65,11 @@ class SafeObjectPool<T> implements ObjectPool<T> {
     public
     T newInstance() {
         return poolableObject.create();
+    }
+
+    @Override
+    public
+    int size() {
+        return queue.size();
     }
 }

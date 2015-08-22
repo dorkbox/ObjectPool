@@ -42,7 +42,9 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
         objects = new MpmcArrayQueue<T>(newSize);
 
         for (int x = 0; x < newSize; x++) {
-            objects.offer(poolableObject.create());
+            T e = poolableObject.create();
+            poolableObject.reset(e);
+            objects.offer(e);
         }
     }
 
@@ -77,6 +79,7 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
     @Override
     public
     void release(T object) {
+        poolableObject.reset(object);
         boolean waiting = objects.peek() == null;
 
         // This could potentially happen due to optimistic calculations by the implementation queue.
@@ -109,5 +112,15 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
     public
     T newInstance() {
         return poolableObject.create();
+    }
+
+
+    /**
+     * This is an optimistic calculation, and if being used by multiple threads, can be inaccurate.
+     */
+    @Override
+    public
+    int size() {
+        return objects.size();
     }
 }
