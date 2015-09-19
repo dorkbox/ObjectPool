@@ -20,7 +20,6 @@ abstract class PoolableObject<T> {
 
     /**
      * Called when an object is returned to the pool, useful for resetting an objects state, for example.
-     * @param object
      */
     @SuppressWarnings("UnusedParameters")
     public
