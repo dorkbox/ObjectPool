@@ -23,7 +23,15 @@ abstract class PoolableObject<T> {
      */
     @SuppressWarnings("UnusedParameters")
     public
-    void reset(T object) {
+    void onReturn(T object) {
+    }
+
+    /**
+     * Called when an object is taken from the pool, useful for setting an objects state, for example.
+     */
+    @SuppressWarnings("UnusedParameters")
+    public
+    void onTake(T object) {
     }
 
 

@@ -33,7 +33,7 @@ class SafeObjectPool<T> implements ObjectPool<T> {
 
         for (int x = 0; x < size; x++) {
             T e = poolableObject.create();
-            poolableObject.reset(e);
+            poolableObject.onReturn(e);
             this.queue.add(e);
         }
     }
@@ -44,11 +44,14 @@ class SafeObjectPool<T> implements ObjectPool<T> {
         return this.queue.take();
     }
 
+    @SuppressWarnings({"Duplicates", "SpellCheckingInspection"})
     @Override
     public
     T takeUninterruptibly() {
         try {
-            return take();
+            T take = take();
+            poolableObject.onTake(take);
+            return take;
         } catch (InterruptedException e) {
             return null;
         }
@@ -57,7 +60,7 @@ class SafeObjectPool<T> implements ObjectPool<T> {
     @Override
     public
     void release(T object) {
-        poolableObject.reset(object);
+        poolableObject.onReturn(object);
         this.queue.offer(object);
     }
 

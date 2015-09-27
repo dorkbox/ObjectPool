@@ -43,7 +43,7 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
 
         for (int x = 0; x < newSize; x++) {
             T e = poolableObject.create();
-            poolableObject.reset(e);
+            poolableObject.onReturn(e);
             objects.offer(e);
         }
     }
@@ -63,14 +63,18 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
             }
         }
 
+        poolableObject.onTake(poll);
         return poll;
     }
 
+    @SuppressWarnings({"Duplicates", "SpellCheckingInspection"})
     @Override
     public
     T takeUninterruptibly() {
         try {
-            return take();
+            final T take = take();
+            poolableObject.onTake(take);
+            return take;
         } catch (InterruptedException e) {
             return null;
         }
@@ -79,7 +83,7 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
     @Override
     public
     void release(T object) {
-        poolableObject.reset(object);
+        poolableObject.onReturn(object);
         boolean waiting = objects.peek() == null;
 
         // This could potentially happen due to optimistic calculations by the implementation queue.
