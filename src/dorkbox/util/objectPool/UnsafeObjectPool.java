@@ -73,7 +73,6 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
     T takeUninterruptibly() {
         try {
             final T take = take();
-            poolableObject.onTake(take);
             return take;
         } catch (InterruptedException e) {
             return null;

@@ -41,7 +41,9 @@ class SafeObjectPool<T> implements ObjectPool<T> {
     @Override
     public
     T take() throws InterruptedException {
-        return this.queue.take();
+        final T take = this.queue.take();
+        poolableObject.onTake(take);
+        return take;
     }
 
     @SuppressWarnings({"Duplicates", "SpellCheckingInspection"})
@@ -50,7 +52,6 @@ class SafeObjectPool<T> implements ObjectPool<T> {
     T takeUninterruptibly() {
         try {
             T take = take();
-            poolableObject.onTake(take);
             return take;
         } catch (InterruptedException e) {
             return null;
