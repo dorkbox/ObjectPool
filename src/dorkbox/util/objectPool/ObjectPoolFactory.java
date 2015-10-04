@@ -24,7 +24,7 @@ class ObjectPoolFactory {
     }
 
     /**
-     * Creates a pool of the specified size
+     * Creates a pool of the specified size. The "Fast/Unsafe" object pool will always have a size rounded up to the nearest power of 2.
      */
     public static
     <T> ObjectPool<T> create(PoolableObject<T> poolableObject, int size) {
