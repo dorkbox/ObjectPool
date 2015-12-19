@@ -90,7 +90,10 @@ class UnsafeObjectPool<T> implements ObjectPool<T> {
         if (!objects.offer(object)) {
             int limit = FULL_RETRY_LIMIT;
             while (!objects.offer(object) && limit-- > 0) {
-                Thread.yield();
+                try {
+                    Thread.sleep(2L);
+                } catch (InterruptedException ignored) {
+                }
             }
 
             if (limit <= 0) {

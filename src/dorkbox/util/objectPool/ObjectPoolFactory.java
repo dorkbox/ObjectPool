@@ -38,4 +38,34 @@ class ObjectPoolFactory {
             return slowObjectPool;
         }
     }
+
+
+    /**
+     * Creates an UNSAFE pool of the specified size, rounded up to the nearest power of 2.
+     */
+    public static
+    <T> ObjectPool<T> createFast(PoolableObject<T> poolableObject, int size) {
+        // here we use FAST (via UNSAFE)
+        UnsafeObjectPool<T> fastObjectPool = null;
+        try {
+            fastObjectPool = new UnsafeObjectPool<T>(poolableObject, size);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            throw new RuntimeException("Unable to create a fast object pool, use 'create()' instead. Aborting.", e);
+
+        }
+        return fastObjectPool;
+    }
+
+
+    /**
+     * Creates a SAFE pool of the specified size.
+     */
+    public static
+    <T> ObjectPool<T> createSafe(PoolableObject<T> poolableObject, int size) {
+            // fallback (LinkedBlockingDeque) in case UNSAFE isn't available. (ie: android)
+        SafeObjectPool<T> slowObjectPool = new SafeObjectPool<T>(poolableObject, size);
+        return slowObjectPool;
+    }
+
 }
