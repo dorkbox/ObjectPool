@@ -44,12 +44,13 @@ Usage:
 <dependency>
   <groupId>com.dorkbox</groupId>
   <artifactId>ObjectPool</artifactId>
-  <version>1.7</version>
+  <version>1.8</version>
 </dependency>
 ```
 
 Or if you don't want to use Maven, you can access the files directly here:  
 https://oss.sonatype.org/content/repositories/releases/com/dorkbox/ObjectPool/
+
 
 
 

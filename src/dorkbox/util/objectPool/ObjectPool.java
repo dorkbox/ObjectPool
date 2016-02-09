@@ -22,6 +22,7 @@ class ObjectPool<T> {
     private final ArrayBlockingQueue<T> queue;
     private final PoolableObject<T> poolableObject;
 
+    public
     ObjectPool(PoolableObject<T> poolableObject, int size) {
         this.poolableObject = poolableObject;
 
