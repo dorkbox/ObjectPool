@@ -52,5 +52,6 @@ Or if you don't want to use Maven, you can access the files directly here:
 https://oss.sonatype.org/content/repositories/releases/com/dorkbox/ObjectPool/
 
 
+<h2>License</h2>
 
-
+This project is distributed under the terms of the Apache v2.0 License. See file "LICENSE" for further references.
