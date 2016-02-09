@@ -1,22 +1,9 @@
 ObjectPool
 ==========
 
-This provides an ObjectPool factory, for providing two different types of object pools. Safe and unsafe.
+This provides an ObjectPool, for providing for a safe, and quick pool of objects of a specific size. This is only recommended in systems 
+were garbage collection is to be kept to a minimum, and the created objects are large.
 
-The main distinction between this pool and others, is speed and compatibility. The factory offers two
-implementations:
-- https://github.com/ashkrit/blog/tree/master/FastObjectPool
-- https://code.google.com/p/furious-objectpool
-
-
-The faster implementation uses UNSAFE, which is unavailable on android and non-oracle JVMs, in which case the
-fallback pool is used, which is based on a LinkedBlockingDeque.  
-
-
-If the list gets hot and contended, you can get scaling bugs. It gets complicated too fast and is not 
-worth it for small to even moderate sized objects.  
-
-Use it only for large objects.  
 
 - This is for cross-platform use, specifically - linux 32/64, mac 32/64, and windows 32/64. Java 6+
 
@@ -24,12 +11,29 @@ Use it only for large objects.
 Usage:
 ```
    /**
-    * Takes an object from the pool
+    * Takes an object from the pool, Blocks until an item is available in the pool.
     */
     public ObjectPoolHolder<T> take();
 
-   /**
-    * Return object to the pool
-    */
-    public void release(ObjectPoolHolder<T> object);
+    /**
+     * Takes an object from the pool, Blocks until an item is available in the pool.
+     * <p/>
+     * This method catches {@link InterruptedException} and discards it silently.
+     */
+    T takeUninterruptibly() {
+
+    /**
+     * Return object to the pool, waking the threads that have blocked during take()
+     */
+    void release(T object);
+
+    /**
+     * @return a new object instance created by the pool.
+     */
+    T newInstance();
+
+    /**
+     * @return the number of currently pooled objects
+     */
+    int size();
 ```

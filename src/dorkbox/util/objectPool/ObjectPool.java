@@ -61,7 +61,7 @@ class ObjectPool<T> {
     }
 
     /**
-     * Return object to the pool, waking those threads that have blocked during take()
+     * Return object to the pool, waking the threads that have blocked during take()
      */
     public
     void release(T object) {
@@ -79,7 +79,7 @@ class ObjectPool<T> {
 
 
     /**
-     * @return the number of pooled objects
+     * @return the number of currently pooled objects
      */
     public
     int size() {
