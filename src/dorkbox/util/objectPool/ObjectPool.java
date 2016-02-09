@@ -15,33 +15,74 @@
  */
 package dorkbox.util.objectPool;
 
-@SuppressWarnings("ALL")
+import java.util.concurrent.ArrayBlockingQueue;
+
 public
-interface ObjectPool<T> {
+class ObjectPool<T> {
+    private final ArrayBlockingQueue<T> queue;
+    private final PoolableObject<T> poolableObject;
+
+    ObjectPool(PoolableObject<T> poolableObject, int size) {
+        this.poolableObject = poolableObject;
+
+        this.queue = new ArrayBlockingQueue<T>(size);
+
+        for (int x = 0; x < size; x++) {
+            T e = poolableObject.create();
+            poolableObject.onReturn(e);
+            this.queue.add(e);
+        }
+    }
+
     /**
      * Takes an object from the pool, Blocks until an item is available in the pool.
      */
-    T take() throws InterruptedException;
+    public
+    T take() throws InterruptedException {
+        final T take = this.queue.take();
+        poolableObject.onTake(take);
+        return take;
+    }
 
     /**
      * Takes an object from the pool, Blocks until an item is available in the pool.
      * <p/>
      * This method catches {@link InterruptedException} and discards it silently.
      */
-    T takeUninterruptibly();
+    @SuppressWarnings({"Duplicates", "SpellCheckingInspection"})
+    public
+    T takeUninterruptibly() {
+        try {
+            T take = take();
+            return take;
+        } catch (InterruptedException e) {
+            return null;
+        }
+    }
 
     /**
      * Return object to the pool, waking those threads that have blocked during take()
      */
-    void release(T object);
+    public
+    void release(T object) {
+        poolableObject.onReturn(object);
+        this.queue.offer(object);
+    }
 
     /**
      * @return a new object instance created by the pool.
      */
-    T newInstance();
+    public
+    T newInstance() {
+        return poolableObject.create();
+    }
+
 
     /**
      * @return the number of pooled objects
      */
-    int size();
+    public
+    int size() {
+        return queue.size();
+    }
 }
