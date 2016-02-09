@@ -1,9 +1,4 @@
     - Dorkbox ObjectPool - Apache 2.0 License
       https://github.com/dorkbox
       Copyright 2014, dorkbox, llc
-        Fast (via unsafe) and compatible java object pool factory
-
-
-    - JCTools - Apache 2.0 License
-      https://github.com/JCTools/JCTools
-      Copyright 2013, JCTools, Nitsan Wakart
+        Fast and compatible java object pool

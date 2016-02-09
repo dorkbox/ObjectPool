@@ -1,8 +1,7 @@
 ObjectPool
 ==========
 
-This provides an ObjectPool, for providing for a safe, and quick pool of objects of a specific size. This is only recommended in systems 
-were garbage collection is to be kept to a minimum, and the created objects are large.
+This provides an ObjectPool, for providing for a safe, and fixed sized pool of objects. This is only recommended in systems were garbage collection is to be kept to a minimum, and the created objects are large.
 
 
 - This is for cross-platform use, specifically - linux 32/64, mac 32/64, and windows 32/64. Java 6+
@@ -37,3 +36,20 @@ Usage:
      */
     int size();
 ```
+
+
+<h4>We now release to maven!</h4> 
+
+```
+<dependency>
+  <groupId>com.dorkbox</groupId>
+  <artifactId>ObjectPool</artifactId>
+  <version>1.7</version>
+</dependency>
+```
+
+Or if you don't want to use Maven, you can access the files directly here:  
+https://oss.sonatype.org/content/repositories/releases/com/dorkbox/ObjectPool/
+
+
+
