@@ -65,8 +65,7 @@ class ObjectPool<T> {
     public
     T takeUninterruptibly() {
         try {
-            T take = take();
-            return take;
+            return take();
         } catch (InterruptedException e) {
             return null;
         }

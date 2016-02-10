@@ -21,7 +21,6 @@ abstract class PoolableObject<T> {
     /**
      * Called when an object is returned to the pool, useful for resetting an objects state, for example.
      */
-    @SuppressWarnings("UnusedParameters")
     public
     void onReturn(T object) {
     }
@@ -29,7 +28,6 @@ abstract class PoolableObject<T> {
     /**
      * Called when an object is taken from the pool, useful for setting an objects state, for example.
      */
-    @SuppressWarnings("UnusedParameters")
     public
     void onTake(T object) {
     }
