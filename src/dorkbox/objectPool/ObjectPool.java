@@ -13,14 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.util.objectPool;
+package dorkbox.objectPool;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+/**
+ * @author dorkbox, llc
+ */
 public
 class ObjectPool<T> {
     private final ArrayBlockingQueue<T> queue;
     private final PoolableObject<T> poolableObject;
+
+    /**
+     * Gets the version number.
+     */
+    public static
+    String getVersion() {
+        return "2.0";
+    }
 
     public
     ObjectPool(PoolableObject<T> poolableObject, int size) {
@@ -87,3 +98,5 @@ class ObjectPool<T> {
         return queue.size();
     }
 }
+
+

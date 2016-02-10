@@ -44,7 +44,7 @@ Usage:
 <dependency>
   <groupId>com.dorkbox</groupId>
   <artifactId>ObjectPool</artifactId>
-  <version>1.8</version>
+  <version>2.0</version>
 </dependency>
 ```
 
@@ -55,3 +55,6 @@ https://oss.sonatype.org/content/repositories/releases/com/dorkbox/ObjectPool/
 <h2>License</h2>
 
 This project is distributed under the terms of the Apache v2.0 License. See file "LICENSE" for further references.
+
+
+
