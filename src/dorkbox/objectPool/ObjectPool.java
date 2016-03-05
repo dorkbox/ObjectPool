@@ -15,86 +15,106 @@
  */
 package dorkbox.objectPool;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.lang.ref.SoftReference;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * @author dorkbox, llc
  */
-public
-class ObjectPool<T> {
-    private final ArrayBlockingQueue<T> queue;
-    private final PoolableObject<T> poolableObject;
-
+public abstract
+class ObjectPool<T> implements Pool<T> {
     /**
      * Gets the version number.
      */
     public static
     String getVersion() {
-        return "2.1";
-    }
-
-    public
-    ObjectPool(PoolableObject<T> poolableObject, int size) {
-        this.poolableObject = poolableObject;
-
-        this.queue = new ArrayBlockingQueue<T>(size);
-
-        for (int x = 0; x < size; x++) {
-            T e = poolableObject.create();
-            poolableObject.onReturn(e);
-            this.queue.add(e);
-        }
-    }
-
-    /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
-     */
-    public
-    T take() throws InterruptedException {
-        final T take = this.queue.take();
-        poolableObject.onTake(take);
-        return take;
-    }
-
-    /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
-     * <p/>
-     * This method catches {@link InterruptedException} and discards it silently.
-     */
-    @SuppressWarnings({"Duplicates", "SpellCheckingInspection"})
-    public
-    T takeUninterruptibly() {
-        try {
-            return take();
-        } catch (InterruptedException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Return object to the pool, waking the threads that have blocked during take()
-     */
-    public
-    void release(T object) {
-        poolableObject.onReturn(object);
-        this.queue.offer(object);
-    }
-
-    /**
-     * @return a new object instance created by the pool.
-     */
-    public
-    T newInstance() {
-        return poolableObject.create();
+        return "2.2";
     }
 
 
     /**
-     * @return the number of currently pooled objects
+     * Creates a blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
+     * {@link ObjectPool#take()} will wait for a corresponding {@link ObjectPool#put(Object)}.
+     *
+     * @param poolableObject controls the lifecycle of the pooled objects.
+     * @param size the size of the pool to create
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
      */
-    public
-    int size() {
-        return queue.size();
+    public static <T> ObjectPool<T> Blocking(PoolableObject<T> poolableObject, int size) {
+        return new BlockingPool<T>(poolableObject, size);
+    }
+
+    /**
+     * Creates a blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
+     * {@link ObjectPool#take()} will wait for a corresponding {@link ObjectPool#put(Object)}.
+     *
+     * @param poolableObject controls the lifecycle of the pooled objects.
+     * @param queue the blocking queue implementation to use
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
+     */
+    public static <T> ObjectPool<T> Blocking(PoolableObject<T> poolableObject, BlockingQueue<T> queue) {
+        return new BlockingPool<T>(poolableObject, queue);
+    }
+
+
+    /**
+     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
+     * pool will never expire (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects that will expire as needed).
+     *
+     * @param poolableObject controls the lifecycle of the pooled objects.
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the default ConcurrentLinkedQueue implementation
+     */
+    public static <T> ObjectPool<T> NonBlocking(PoolableObject<T> poolableObject) {
+        return new NonBlockingPool<T>(poolableObject);
+    }
+
+    /**
+     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
+     * pool will never expire (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects that will expire as needed).
+     *
+     * @param poolableObject controls the lifecycle of the pooled objects.
+     * @param queue the  queue implementation to use
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the default ConcurrentLinkedQueue implementation
+     */
+    public static <T> ObjectPool<T> NonBlocking(PoolableObject<T> poolableObject, Queue<T> queue) {
+        return new NonBlockingPool<T>(poolableObject, queue);
+    }
+
+
+    /**
+     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
+     * pool will expire in response to memory demand. (See {@link #NonBlocking(PoolableObject)} for pooled objects that will never expire)
+     *
+     * @param poolableObject controls the lifecycle of the pooled objects.
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the default ConcurrentLinkedQueue implementation
+     */
+    public static <T> ObjectPool<T> NonBlockingSoftReference(PoolableObject<T> poolableObject) {
+        return new NonBlockingSoftPool<T>(poolableObject);
+    }
+
+    /**
+     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
+     * pool will expire in response to memory demand. (See {@link #NonBlocking(PoolableObject)} for pooled objects that will never expire)
+     *
+     * @param poolableObject controls the lifecycle of the pooled objects.
+     * @param queue the  queue implementation to use
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the default ConcurrentLinkedQueue implementation
+     */
+    public static <T> ObjectPool<T> NonBlockingSoftReference(PoolableObject<T> poolableObject, Queue<SoftReference<T>> queue) {
+        return new NonBlockingSoftPool<T>(poolableObject, queue);
     }
 }
 
