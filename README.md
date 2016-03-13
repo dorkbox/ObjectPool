@@ -44,7 +44,7 @@ Usage:
 <dependency>
   <groupId>com.dorkbox</groupId>
   <artifactId>ObjectPool</artifactId>
-  <version>2.2</version>
+  <version>2.3</version>
 </dependency>
 ```
 
