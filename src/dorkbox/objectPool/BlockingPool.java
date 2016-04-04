@@ -26,14 +26,14 @@ class BlockingPool<T> extends ObjectPool<T> {
     private final PoolableObject<T> poolableObject;
 
     BlockingPool(PoolableObject<T> poolableObject, int size) {
-        this(poolableObject, new ArrayBlockingQueue<T>(size));
+        this(poolableObject, new ArrayBlockingQueue<T>(size), size);
     }
 
-    BlockingPool(final PoolableObject<T> poolableObject, final BlockingQueue<T> queue) {
+    BlockingPool(final PoolableObject<T> poolableObject, final BlockingQueue<T> queue, final int size) {
         this.poolableObject = poolableObject;
         this.queue = queue;
 
-        for (int x = 0; x < queue.size(); x++) {
+        for (int x = 0; x < size; x++) {
             T e = poolableObject.create();
             poolableObject.onReturn(e);
             this.queue.add(e);

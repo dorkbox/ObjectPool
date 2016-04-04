@@ -43,7 +43,7 @@ class ObjectPool<T> implements Pool<T> {
      *
      * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
      */
-    public static <T> ObjectPool<T> Blocking(PoolableObject<T> poolableObject, int size) {
+    public static <T> ObjectPool<T> Blocking(final PoolableObject<T> poolableObject, final int size) {
         return new BlockingPool<T>(poolableObject, size);
     }
 
@@ -57,8 +57,8 @@ class ObjectPool<T> implements Pool<T> {
      *
      * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
      */
-    public static <T> ObjectPool<T> Blocking(PoolableObject<T> poolableObject, BlockingQueue<T> queue) {
-        return new BlockingPool<T>(poolableObject, queue);
+    public static <T> ObjectPool<T> Blocking(final PoolableObject<T> poolableObject, final BlockingQueue<T> queue, final int size) {
+        return new BlockingPool<T>(poolableObject, queue, size);
     }
 
 
@@ -71,7 +71,7 @@ class ObjectPool<T> implements Pool<T> {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    public static <T> ObjectPool<T> NonBlocking(PoolableObject<T> poolableObject) {
+    public static <T> ObjectPool<T> NonBlocking(final PoolableObject<T> poolableObject) {
         return new NonBlockingPool<T>(poolableObject);
     }
 
@@ -85,7 +85,7 @@ class ObjectPool<T> implements Pool<T> {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    public static <T> ObjectPool<T> NonBlocking(PoolableObject<T> poolableObject, Queue<T> queue) {
+    public static <T> ObjectPool<T> NonBlocking(final PoolableObject<T> poolableObject, final Queue<T> queue) {
         return new NonBlockingPool<T>(poolableObject, queue);
     }
 
@@ -99,7 +99,7 @@ class ObjectPool<T> implements Pool<T> {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    public static <T> ObjectPool<T> NonBlockingSoftReference(PoolableObject<T> poolableObject) {
+    public static <T> ObjectPool<T> NonBlockingSoftReference(final PoolableObject<T> poolableObject) {
         return new NonBlockingSoftPool<T>(poolableObject);
     }
 
@@ -113,7 +113,7 @@ class ObjectPool<T> implements Pool<T> {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    public static <T> ObjectPool<T> NonBlockingSoftReference(PoolableObject<T> poolableObject, Queue<SoftReference<T>> queue) {
+    public static <T> ObjectPool<T> NonBlockingSoftReference(final PoolableObject<T> poolableObject, final Queue<SoftReference<T>> queue) {
         return new NonBlockingSoftPool<T>(poolableObject, queue);
     }
 }
