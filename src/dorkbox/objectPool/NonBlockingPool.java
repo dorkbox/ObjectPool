@@ -19,6 +19,10 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
+ * A non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
+ * pool will never expire or be automatically garbage collected. (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects
+ * that will expire/GC as needed).
+ *
  * @author dorkbox, llc
  */
 class NonBlockingPool<T> extends ObjectPool<T> {

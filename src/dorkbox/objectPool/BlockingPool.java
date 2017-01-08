@@ -19,6 +19,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
+ * A blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
+ * {@link ObjectPool#take()} will wait for a corresponding {@link ObjectPool#put(Object)}.
+ *
  * @author dorkbox, llc
  */
 class BlockingPool<T> extends ObjectPool<T> {

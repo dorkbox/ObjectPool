@@ -64,7 +64,8 @@ class ObjectPool<T> implements Pool<T> {
 
     /**
      * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will never expire (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects that will expire as needed).
+     * pool will never expire or be automatically garbage collected. (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects
+     * that will expire/GC as needed).
      *
      * @param poolableObject controls the lifecycle of the pooled objects.
      * @param <T> the type of object used in the pool
@@ -77,7 +78,8 @@ class ObjectPool<T> implements Pool<T> {
 
     /**
      * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will never expire (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects that will expire as needed).
+     * pool will never expire or be automatically garbage collected. (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects
+     * that will expire/GC as needed).
      *
      * @param poolableObject controls the lifecycle of the pooled objects.
      * @param queue the  queue implementation to use
@@ -92,7 +94,8 @@ class ObjectPool<T> implements Pool<T> {
 
     /**
      * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will expire in response to memory demand. (See {@link #NonBlocking(PoolableObject)} for pooled objects that will never expire)
+     * pool will expire and be automatically Garbage Collected in response to memory demand. (See {@link #NonBlocking(PoolableObject)}
+     * for pooled objects that will never expire).
      *
      * @param poolableObject controls the lifecycle of the pooled objects.
      * @param <T> the type of object used in the pool
@@ -105,7 +108,8 @@ class ObjectPool<T> implements Pool<T> {
 
     /**
      * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will expire in response to memory demand. (See {@link #NonBlocking(PoolableObject)} for pooled objects that will never expire)
+     * pool will expire and be automatically Garbage Collected in response to memory demand. (See {@link #NonBlocking(PoolableObject)}
+     * for pooled objects that will never expire).
      *
      * @param poolableObject controls the lifecycle of the pooled objects.
      * @param queue the  queue implementation to use
