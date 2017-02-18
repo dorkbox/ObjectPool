@@ -37,9 +37,19 @@ Usage:
     int size();
 ```
 
+&nbsp; 
+&nbsp; 
 
-<h4>We now release to maven!</h4> 
+Release Notes 
+---------
 
+This project includes some utility classes that are a small subset of a much larger library. These classes are **kept in sync** with the main utilities library, so "jar hell" is not an issue, and the latest release will always include the same version of utility files as all of the other projects in the dorkbox repository at that time. 
+  
+  Please note that the utility source code is included in the release and on our [GitHub](https://github.com/dorkbox/Utilities) repository.
+  
+  
+Maven Info
+---------
 ```
 <dependency>
   <groupId>com.dorkbox</groupId>
@@ -52,7 +62,7 @@ Or if you don't want to use Maven, you can access the files directly here:
 https://oss.sonatype.org/content/repositories/releases/com/dorkbox/ObjectPool/
 
 
-<h2>License</h2>
-
+License
+---------
 This project is © 2014 dorkbox llc, and is distributed under the terms of the Apache v2.0 License. See file "LICENSE" for further references.
 
