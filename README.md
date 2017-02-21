@@ -54,7 +54,7 @@ Maven Info
 <dependency>
   <groupId>com.dorkbox</groupId>
   <artifactId>ObjectPool</artifactId>
-  <version>2.7</version>
+  <version>2.8</version>
 </dependency>
 ```
 
