@@ -19,21 +19,21 @@ package dorkbox.objectPool;
  * @author dorkbox, llc
  */
 interface Pool<T> {
-
     /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
+     * Takes an object from the pool. If the pool is a {@link BlockingPool}, this will wait until an item is available in
+     * the pool.
      * <p/>
      * This method catches {@link InterruptedException} and discards it silently.
      */
     T take();
 
     /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
+     * Takes an object from the pool. If the pool is a {@link BlockingPool}, this will wait until an item is available in the pool.
      */
     T takeInterruptibly() throws InterruptedException;
 
     /**
-     * Return object to the pool, waking the threads that have blocked during take()
+     * Return object to the pool. If the pool is a {@link BlockingPool}, this will wake the threads that have blocked during take/takeInterruptibly()
      */
     void put(T object);
 
