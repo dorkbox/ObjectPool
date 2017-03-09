@@ -9,44 +9,61 @@ This provides an ObjectPool, for providing for a safe, and fixed sized pool of o
 
 Usage:
 ```
-   /**
-    * Takes an object from the pool, Blocks until an item is available in the pool.
-    */
-    public ObjectPoolHolder<T> take();
+    ObjectPool<T> pool = ObjectPool.NonBlocking(new PoolableObject<T>() {
+            /**
+             * Called when an object is returned to the pool, useful for resetting an objects state, for example.
+             */
+            public
+            void onReturn(T object) {
+                object.foo = 0;
+                object.bar = null;
+            }
+    
+            /**
+             * Called when an object is taken from the pool, useful for setting an objects state, for example.
+             */
+            public
+            void onTake(T object) {
+            }
+    
+            /**
+             * Called when a new instance is created
+             */
+            @Override
+            public
+            T create() {
+                return new Object();
+            }
+        });
+        
+        
 
     /**
      * Takes an object from the pool, Blocks until an item is available in the pool.
      * <p/>
      * This method catches {@link InterruptedException} and discards it silently.
      */
-    T takeUninterruptibly() {
+    T take();
 
+    /**
+     * Takes an object from the pool, Blocks until an item is available in the pool.
+     */
+    T takeInterruptibly() throws InterruptedException;
+ 
     /**
      * Return object to the pool, waking the threads that have blocked during take()
      */
-    void release(T object);
-
+    void put(T object);
+ 
     /**
      * @return a new object instance created by the pool.
      */
     T newInstance();
-
-    /**
-     * @return the number of currently pooled objects
-     */
-    int size();
 ```
 
 &nbsp; 
 &nbsp; 
 
-Release Notes 
----------
-
-This project includes some utility classes that are a small subset of a much larger library. These classes are **kept in sync** with the main utilities library, so "jar hell" is not an issue, and the latest release will always include the same version of utility files as all of the other projects in the dorkbox repository at that time. 
-  
-  Please note that the utility source code is included in the release and on our [GitHub](https://github.com/dorkbox/Utilities) repository.
-  
   
 Maven Info
 ---------
