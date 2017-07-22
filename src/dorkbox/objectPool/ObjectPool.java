@@ -19,17 +19,20 @@ import java.lang.ref.SoftReference;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 
+import dorkbox.util.Version;
+
 /**
  * @author dorkbox, llc
  */
+@SuppressWarnings("unused")
 public abstract
 class ObjectPool<T> implements Pool<T> {
     /**
      * Gets the version number.
      */
     public static
-    String getVersion() {
-        return "2.8";
+    Version getVersion() {
+        return new Version("2.8");
     }
 
 
