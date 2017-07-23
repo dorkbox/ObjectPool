@@ -69,11 +69,14 @@ Usage:
 Maven Info
 ---------
 ```
-<dependency>
-  <groupId>com.dorkbox</groupId>
-  <artifactId>ObjectPool</artifactId>
-  <version>2.8</version>
-</dependency>
+<dependencies>
+    ...
+    <dependency>
+      <groupId>com.dorkbox</groupId>
+      <artifactId>ObjectPool</artifactId>
+      <version>2.8</version>
+    </dependency>
+</dependencies>
 ```
 
 Or if you don't want to use Maven, you can access the files directly here:  
