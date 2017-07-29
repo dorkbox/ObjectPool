@@ -32,7 +32,7 @@ class ObjectPool<T> implements Pool<T> {
      */
     public static
     Version getVersion() {
-        return new Version("2.8");
+        return new Version("2.9");
     }
 
 
