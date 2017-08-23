@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.objectPool;
+package dorkbox.objectpool;
 
 import java.lang.ref.SoftReference;
 import java.util.Queue;
