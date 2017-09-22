@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.objectpool;
+package dorkbox.objectPool;
 
 import java.lang.ref.SoftReference;
 import java.util.Queue;
@@ -41,6 +41,7 @@ class NonBlockingSoftPool<T> extends ObjectPool<T> {
     /**
      * Takes an object from the pool.
      */
+    @Override
     public
     T take() {
         T obj;
@@ -60,6 +61,7 @@ class NonBlockingSoftPool<T> extends ObjectPool<T> {
     /**
      * Takes an object from the pool.
      */
+    @Override
     public
     T takeInterruptibly() throws InterruptedException {
         return take();
@@ -68,6 +70,7 @@ class NonBlockingSoftPool<T> extends ObjectPool<T> {
     /**
      * Return object to the pool.
      */
+    @Override
     public
     void put(T object) {
         poolableObject.onReturn(object);
@@ -77,6 +80,7 @@ class NonBlockingSoftPool<T> extends ObjectPool<T> {
     /**
      * @return a new object instance created by the pool.
      */
+    @Override
     public
     T newInstance() {
         return poolableObject.create();

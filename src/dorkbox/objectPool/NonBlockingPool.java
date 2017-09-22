@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 dorkbox, llc
+ * Copyright 2016 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.objectpool;
+package dorkbox.objectPool;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * A blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
- * {@link ObjectPool#take()} will wait for a corresponding {@link ObjectPool#put(Object)}.
+ * A non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
+ * pool will never expire or be automatically garbage collected. (see {@link #NonBlockingSoftReference(PoolableObject)} for pooled objects
+ * that will expire/GC as needed).
  *
  * @author dorkbox, llc
  */
-class BlockingPool<T> extends ObjectPool<T> {
-    private final BlockingQueue<T> queue;
+class NonBlockingPool<T> extends ObjectPool<T> {
+    private final Queue<T> queue;
     private final PoolableObject<T> poolableObject;
 
-    BlockingPool(PoolableObject<T> poolableObject, int size) {
-        this(poolableObject, new ArrayBlockingQueue<T>(size), size);
+    NonBlockingPool(final PoolableObject<T> poolableObject) {
+        this(poolableObject, new ConcurrentLinkedQueue<T>());
     }
 
-    BlockingPool(final PoolableObject<T> poolableObject, final BlockingQueue<T> queue, final int size) {
+    NonBlockingPool(final PoolableObject<T> poolableObject, final Queue<T> queue) {
         this.poolableObject = poolableObject;
         this.queue = queue;
+    }
 
-        for (int x = 0; x < size; x++) {
-            T e = poolableObject.create();
-            poolableObject.onReturn(e);
-            this.queue.add(e);
+    /**
+     * Takes an object from the pool, Blocks until an item is available in the pool.
+     */
+    @Override
+    public
+    T take() {
+        T take = this.queue.poll();
+        if (take == null) {
+            take = poolableObject.create();
         }
+
+        poolableObject.onTake(take);
+        return take;
     }
 
     /**
@@ -48,28 +58,16 @@ class BlockingPool<T> extends ObjectPool<T> {
      * <p/>
      * This method catches {@link InterruptedException} and discards it silently.
      */
-    public
-    T take() {
-        try {
-            return takeInterruptibly();
-        } catch (InterruptedException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
-     */
+    @Override
     public
     T takeInterruptibly() throws InterruptedException {
-        final T take = this.queue.take();
-        poolableObject.onTake(take);
-        return take;
+        return take();
     }
 
     /**
      * Return object to the pool, waking the threads that have blocked during take()
      */
+    @Override
     public
     void put(T object) {
         poolableObject.onReturn(object);
@@ -79,6 +77,7 @@ class BlockingPool<T> extends ObjectPool<T> {
     /**
      * @return a new object instance created by the pool.
      */
+    @Override
     public
     T newInstance() {
         return poolableObject.create();
