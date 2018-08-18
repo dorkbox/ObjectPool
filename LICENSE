@@ -1,4 +1,5 @@
-    - Dorkbox ObjectPool - Apache 2.0 License
-      https://github.com/dorkbox
-      Copyright 2014, dorkbox, llc
-        Fast, lightweight, and compatible blocking/non-blocking/soft-reference object pool for Java 6+
+ - ObjectPool - 
+   https://git.dorkbox.com/dorkbox/ObjectPool
+   Copyright 2018 - The Apache Software License, Version 2.0
+     dorkbox, llc
+   Fast, lightweight, and compatible blocking/non-blocking/soft-reference object pool for Java 6+

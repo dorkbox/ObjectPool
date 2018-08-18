@@ -79,8 +79,17 @@ Maven Info
 </dependencies>
 ```
 
+  
+Gradle Info
+---------
+````
+dependencies {
+    ...
+    compile 'com.dorkbox:ObjectPool:2.11'
+}
+````
 Or if you don't want to use Maven, you can access the files directly here:  
-https://oss.sonatype.org/content/repositories/releases/com/dorkbox/ObjectPool/
+https://repo1.maven.org/maven2/com/dorkbox/ObjectPool/
 
 
 License
