@@ -100,12 +100,9 @@ if (propsFile.canRead()) {
 
 
 licensing {
-    license(License.BSD_3) {
+    license(License.APACHE_2) {
         author(Extras.vendor)
-        author("Nathan Sweet")
-        author("Dan Brown")
         url(Extras.url)
-        url("https://github.com/EsotericSoftware/minlog")
         note(Extras.description)
     }
 
