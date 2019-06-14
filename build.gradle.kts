@@ -46,7 +46,7 @@ object Extras {
     // set for the project
     const val description = "Fast, lightweight, and compatible blocking/non-blocking/soft-reference object pool for Java 6+"
     const val group = "com.dorkbox"
-    const val version = "2.11"
+    const val version = "2.12"
 
     // set as project.ext
     const val name = "ObjectPool"
