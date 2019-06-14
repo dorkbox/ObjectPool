@@ -15,8 +15,9 @@
  */
 package dorkbox.objectPool;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+
+import com.conversantmedia.util.concurrent.DisruptorBlockingQueue;
 
 /**
  * A blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
@@ -29,7 +30,7 @@ class BlockingPool<T> extends ObjectPool<T> {
     private final PoolableObject<T> poolableObject;
 
     BlockingPool(PoolableObject<T> poolableObject, int size) {
-        this(poolableObject, new ArrayBlockingQueue<T>(size), size);
+        this(poolableObject, new DisruptorBlockingQueue<T>(size), size);
     }
 
     BlockingPool(final PoolableObject<T> poolableObject, final BlockingQueue<T> queue, final int size) {
