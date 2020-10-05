@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 dorkbox, llc
+ * Copyright 2020 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.objectPool;
+package dorkbox.objectPool
 
 /**
  * @author dorkbox, llc
  */
 interface Pool<T> {
     /**
-     * Takes an object from the pool. If the pool is a {@link BlockingPool}, this will wait until an item is available in
+     * Takes an object from the pool. If the pool is a [BlockingPool], this will wait until an item is available in
      * the pool.
-     * <p/>
-     * This method catches {@link InterruptedException} and discards it silently.
+     *
+     *
+     * This method catches [InterruptedException] and discards it silently.
      */
-    T take();
+    fun take(): T
 
     /**
-     * Takes an object from the pool. If the pool is a {@link BlockingPool}, this will wait until an item is available in the pool.
+     * Takes an object from the pool. If the pool is a [BlockingPool], this will wait until an item is available in the pool.
+     *
+     * @throws InterruptedException
      */
-    T takeInterruptibly() throws InterruptedException;
+    fun takeInterruptibly(): T
 
     /**
-     * Return object to the pool. If the pool is a {@link BlockingPool}, this will wake the threads that have blocked during take/takeInterruptibly()
+     * Return object to the pool. If the pool is a [BlockingPool], this will wake the threads that have blocked during take/takeInterruptibly()
      */
-    void put(T object);
+    fun put(`object`: T)
 
     /**
      * @return a new object instance created by the pool.
      */
-    T newInstance();
+    fun newInstance(): T
 }
-

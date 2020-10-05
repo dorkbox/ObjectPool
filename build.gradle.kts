@@ -30,13 +30,13 @@ gradle.startParameter.warningMode = WarningMode.All
 plugins {
     java
 
-    id("com.dorkbox.GradleUtils") version "1.9"
-    id("com.dorkbox.Licensing") version "2.2"
+    id("com.dorkbox.GradleUtils") version "1.12"
+    id("com.dorkbox.Licensing") version "2.5.2"
     id("com.dorkbox.VersionUpdate") version "2.0"
-    id("com.dorkbox.GradlePublish") version "1.4"
-    id("com.dorkbox.GradleModuleInfo") version "1.0"
+    id("com.dorkbox.GradlePublish") version "1.8"
+    id("com.dorkbox.GradleModuleInfo") version "1.1"
 
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.10"
 }
 
 object Extras {
@@ -81,6 +81,22 @@ sourceSets {
             include("**/*.kt")
         }
     }
+
+    test {
+        java {
+            setSrcDirs(listOf("test"))
+
+            // want to include java files for the source. 'setSrcDirs' resets includes...
+            include("**/*.java")
+        }
+
+        kotlin {
+            setSrcDirs(listOf("test"))
+
+            // want to include java files for the source. 'setSrcDirs' resets includes...
+            include("**/*.java", "**/*.kt")
+        }
+    }
 }
 
 repositories {
@@ -113,5 +129,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Extras.coroutineVer}")
 
     implementation("org.slf4j:slf4j-api:1.7.30")
-    implementation("com.conversantmedia:disruptor:1.2.17")
+    implementation("com.conversantmedia:disruptor:1.2.19")
+
+    testImplementation("junit:junit:4.13")
 }

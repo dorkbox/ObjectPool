@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 dorkbox, llc
+ * Copyright 2020 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.objectPool;
+package dorkbox.objectPool
 
-public
-abstract class PoolableObject<T> {
-
+abstract class PoolObject<T> {
     /**
      * Called when an object is returned to the pool, useful for resetting an objects state, for example.
      */
-    public
-    void onReturn(T object) {
-    }
+    open fun onReturn(`object`: T) {}
 
     /**
      * Called when an object is taken from the pool, useful for setting an objects state, for example.
      */
-    public
-    void onTake(T object) {
-    }
-
+    open fun onTake(`object`: T) {}
 
     /**
      * Called when a new instance is created
      */
-    public abstract T create();
+    abstract fun newInstance(): T
 }
