@@ -52,7 +52,7 @@ object Extras {
 
     val buildDate = Instant.now().toString()
 
-    const val coroutineVer = "1.3.8"
+    const val coroutineVer = "1.3.9"
 }
 
 ///////////////////////////////
@@ -83,13 +83,6 @@ sourceSets {
     }
 
     test {
-        java {
-            setSrcDirs(listOf("test"))
-
-            // want to include java files for the source. 'setSrcDirs' resets includes...
-            include("**/*.java")
-        }
-
         kotlin {
             setSrcDirs(listOf("test"))
 
@@ -126,10 +119,34 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Extras.coroutineVer}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Extras.coroutineVer}")
 
     implementation("org.slf4j:slf4j-api:1.7.30")
     implementation("com.conversantmedia:disruptor:1.2.19")
 
     testImplementation("junit:junit:4.13")
+}
+
+
+publishToSonatype {
+    groupId = Extras.group
+    artifactId = Extras.id
+    version = Extras.version
+
+    name = Extras.name
+    description = Extras.description
+    url = Extras.url
+
+    vendor = Extras.vendor
+    vendorUrl = Extras.vendorUrl
+
+    issueManagement {
+        url = "${Extras.url}/issues"
+        nickname = "Gitea Issues"
+    }
+
+    developer {
+        id = "dorkbox"
+        name = Extras.vendor
+        email = "email@dorkbox.com"
+    }
 }
