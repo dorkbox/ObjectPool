@@ -26,7 +26,7 @@ import kotlinx.coroutines.runBlocking
  *
  * @author dorkbox, llc
  */
-class SuspendingPool<T> internal constructor(
+internal class SuspendingPool<T> internal constructor(
         private val poolObject: SuspendingPoolObject<T>,
         private val channel: Channel<T>,
         size: Int) : SuspendingPool<T> {
