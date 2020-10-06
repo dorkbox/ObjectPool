@@ -23,7 +23,6 @@ interface SuspendingPool<T> {
      * Takes an object from the pool. If the pool is a [SuspendingPool], this will wait until an item is available in
      * the pool.
      *
-     *
      * This method catches [InterruptedException] and discards it silently.
      */
     suspend fun take(): T

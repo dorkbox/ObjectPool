@@ -25,7 +25,7 @@ import java.util.concurrent.BlockingQueue
  *
  * @author dorkbox, llc
  */
-internal class BlockingPool<T> internal constructor(
+internal class BlockingPool<T> constructor(
         private val poolObject: PoolObject<T>,
         private val queue: BlockingQueue<T>,
         size: Int) : Pool<T> {
@@ -37,8 +37,6 @@ internal class BlockingPool<T> internal constructor(
             queue.offer(e)
         }
     }
-
-
 
     /**
      * Takes an object from the pool, Blocks until an item is available in the pool.

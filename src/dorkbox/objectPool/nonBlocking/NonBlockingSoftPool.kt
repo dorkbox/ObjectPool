@@ -15,6 +15,7 @@
  */
 package dorkbox.objectPool.nonBlocking
 
+import dorkbox.objectPool.ObjectPool
 import dorkbox.objectPool.Pool
 import dorkbox.objectPool.PoolObject
 import java.lang.ref.SoftReference
@@ -22,9 +23,11 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
- * A non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
- * pool will expire and be automatically Garbage Collected in response to memory demand. (See [ObjectPool.NonBlocking]
- * for pooled objects that will never expire).
+ * A non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created.
+ *
+ * The items in the pool will expire and be automatically Garbage Collected in response to memory demand.
+ *
+ * (See [ObjectPool.nonBlocking] for pooled objects that will never expire).
  *
  * @author dorkbox, llc
  */
@@ -33,24 +36,14 @@ internal class NonBlockingSoftPool<T>(
         private val queue: Queue<SoftReference<T>> = ConcurrentLinkedQueue()) : Pool<T> {
 
     /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
-     *
-     * This method catches [InterruptedException] and discards it silently.
+     * Takes an object from the pool, if there is no object available, will create a new object.
      */
     override fun take(): T {
-        return try {
-            takeInterruptibly()
-        } catch (e: InterruptedException) {
-            val newInstance = newInstance()
-            poolObject.onTake(newInstance)
-            newInstance
-        }
+        return takeInterruptibly()
     }
 
     /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
-     *
-     * @throws InterruptedException
+     * Takes an object from the pool, if there is no object available, will create a new object.
      */
     override fun takeInterruptibly(): T {
         val obj: T?

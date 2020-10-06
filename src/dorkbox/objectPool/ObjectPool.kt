@@ -20,10 +20,10 @@ import dorkbox.objectPool.blocking.BlockingPool
 import dorkbox.objectPool.nonBlocking.NonBlockingPool
 import dorkbox.objectPool.nonBlocking.NonBlockingSoftPool
 import dorkbox.objectPool.suspending.SuspendingPool
-import kotlinx.coroutines.channels.Channel
 import java.lang.ref.SoftReference
 import java.util.*
 import java.util.concurrent.BlockingQueue
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * @author dorkbox, llc
@@ -32,49 +32,34 @@ object ObjectPool {
     /**
      * Gets the version number.
      */
-    val version: String
-        get() = "3.0"
+    const val version = "3.0"
 
     /**
-     * Creates a blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
+     * Creates a suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
      * [Pool.take] will wait for a corresponding [Pool.put].
      *
      * @param poolObject controls the lifecycle of the pooled objects.
      * @param size the size of the pool to create
      * @param <T> the type of object used in the pool
      *
-     * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
+     * @return a suspending pool using the kotlin Channel implementation of a specific size
      */
     fun <T> suspending(poolObject: SuspendingPoolObject<T>, size: Int): dorkbox.objectPool.SuspendingPool<T> {
-        return suspending(poolObject, Channel(size), size)
+        return SuspendingPool(poolObject, size)
     }
 
     /**
-     * Creates a blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
+     * Creates a high-performance blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
      * [Pool.take] will wait for a corresponding [Pool.put].
      *
      * @param poolObject controls the lifecycle of the pooled objects.
      * @param size the size of the pool to create
      * @param <T> the type of object used in the pool
      *
-     * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
-     */
-    fun <T> suspending(poolObject: SuspendingPoolObject<T>, channel: Channel<T>, size: Int): dorkbox.objectPool.SuspendingPool<T> {
-        return SuspendingPool(poolObject, channel, size)
-    }
-
-    /**
-     * Creates a blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
-     * [Pool.take] will wait for a corresponding [Pool.put].
-     *
-     * @param poolObject controls the lifecycle of the pooled objects.
-     * @param size the size of the pool to create
-     * @param <T> the type of object used in the pool
-     *
-     * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
+     * @return a blocking pool using the DisruptorBlockingQueue implementation of a specific size
      */
     fun <T> blocking(poolObject: PoolObject<T>, size: Int): Pool<T> {
-        return BlockingPool(poolObject, DisruptorBlockingQueue<T>(size), size)
+        return blocking(poolObject, DisruptorBlockingQueue(size), size)
     }
 
     /**
@@ -85,30 +70,34 @@ object ObjectPool {
      * @param queue the blocking queue implementation to use
      * @param <T> the type of object used in the pool
      *
-     * @return a blocking pool using the default ArrayBlockingQueue implementation of a specific size
+     * @return a blocking pool using the specified [BlockingQueue] implementation of a specific size
      */
     fun <T> blocking(poolObject: PoolObject<T>, queue: BlockingQueue<T>, size: Int): Pool<T> {
         return BlockingPool(poolObject, queue, size)
     }
 
     /**
-     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will never expire or be automatically garbage collected. (see [.NonBlockingSoftReference] for pooled objects
-     * that will expire/GC as needed).
+     * Creates a non-blocking pool which will grow as much as needed.
+     *
+     * If the pool is empty, new objects will be created. The items in the pool will never expire or be automatically garbage collected.
+     *
+     * (see [ObjectPool.nonBlockingSoftReference] for pooled objects that will expire/GC as needed).
      *
      * @param poolObject controls the lifecycle of the pooled objects.
      * @param <T> the type of object used in the pool
      *
-     * @return a blocking pool using the default ConcurrentLinkedQueue implementation
+     * @return a blocking pool using the default [ConcurrentLinkedQueue] implementation
      */
     fun <T> nonBlocking(poolObject: PoolObject<T>): Pool<T> {
         return NonBlockingPool(poolObject)
     }
 
     /**
-     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will never expire or be automatically garbage collected. (see [.NonBlockingSoftReference] for pooled objects
-     * that will expire/GC as needed).
+     * Creates a non-blocking pool which will grow as much as needed.
+     *
+     * If the pool is empty, new objects will be created. The items in the pool will never expire or be automatically garbage collected.
+     *
+     * (see [ObjectPool.nonBlockingSoftReference] for pooled objects that will expire/GC as needed).
      *
      * @param poolObject controls the lifecycle of the pooled objects.
      * @param queue the  queue implementation to use
@@ -121,9 +110,12 @@ object ObjectPool {
     }
 
     /**
-     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will expire and be automatically Garbage Collected in response to memory demand. (See [.NonBlocking]
-     * for pooled objects that will never expire).
+     * Creates a non-blocking pool which will grow as much as needed.
+     *
+     * If the pool is empty, new objects will be created. The items in the pool will expire and be automatically Garbage Collected in
+     * response to memory demand.
+     *
+     * (See [ObjectPool.nonBlocking] for pooled objects that will never expire).
      *
      * @param poolObject controls the lifecycle of the pooled objects.
      * @param <T> the type of object used in the pool
@@ -135,15 +127,18 @@ object ObjectPool {
     }
 
     /**
-     * Creates a non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
-     * pool will expire and be automatically Garbage Collected in response to memory demand. (See [.NonBlocking]
-     * for pooled objects that will never expire).
+     * Creates a non-blocking pool which will grow as much as needed.
+     *
+     * If the pool is empty, new objects will be created. The items in the pool will expire and be automatically Garbage Collected in
+     * response to memory demand.
+     *
+     * (See [ObjectPool.nonBlocking] for pooled objects that will never expire).
      *
      * @param poolObject controls the lifecycle of the pooled objects.
      * @param queue the  queue implementation to use
      * @param <T> the type of object used in the pool
      *
-     * @return a blocking pool using the default ConcurrentLinkedQueue implementation
+     * @return a blocking pool using the specified Queue implementation
      */
     fun <T> nonBlockingSoftReference(poolObject: PoolObject<T>, queue: Queue<SoftReference<T>>): Pool<T> {
         return NonBlockingSoftPool(poolObject, queue)

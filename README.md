@@ -1,67 +1,42 @@
 ObjectPool
 ==========
 
-###### [![Dorkbox](https://badge.dorkbox.com/dorkbox.svg "Dorkbox")](https://git.dorkbox.com/dorkbox/ObjectPool) [![Github](https://badge.dorkbox.com/github.svg "Github")](https://github.com/dorkbox/ObjectPool) [![Gitlab](https://badge.dorkbox.com/gitlab.svg "Gitlab")](https://gitlab.com/dorkbox/ObjectPool) [![Bitbucket](https://badge.dorkbox.com/bitbucket.svg "Bitbucket")](https://bitbucket.org/dorkbox/ObjectPool)
+###### [![Dorkbox](https://badge.dorkbox.com/dorkbox.svg "Dorkbox")](https://git.dorkbox.com/dorkbox/ObjectPool) [![Github](https://badge.dorkbox.com/github.svg "Github")](https://github.com/dorkbox/ObjectPool) [![Gitlab](https://badge.dorkbox.com/gitlab.svg "Gitlab")](https://gitlab.com/dorkbox/ObjectPool)
 
 This provides an ObjectPool, for providing for a safe, and fixed sized pool of objects. This is only recommended in systems were garbage collection is to be kept to a minimum, and the created objects are large.
 
 
-- This is for cross-platform use, specifically - linux 32/64, mac 32/64, and windows 32/64. Java 6+
+- This is for cross-platform use, specifically - linux 32/64, mac 32/64, and windows 32/64. Java 11+
 
 
 Usage:
 ```
-    ObjectPool<T> pool = ObjectPool.NonBlocking(new PoolableObject<T>() {
-            /**
-             * Called when an object is returned to the pool, useful for resetting an objects state, for example.
-             */
-            public
-            void onReturn(T object) {
-                object.foo = 0;
-                object.bar = null;
-            }
+    val <T> pool = ObjectPool.nonBlocking(PoolObject<T>() {
+        /**
+         * Called when an object is returned to the pool, useful for resetting an objects state, for example.
+         */
+         fun onReturn(`object`: Foo) {
+            object.foo = 0;
+            object.bar = null;
+         }
     
-            /**
-             * Called when an object is taken from the pool, useful for setting an objects state, for example.
-             */
-            public
-            void onTake(T object) {
-            }
+         /**
+          * Takes an object from the pool, if there is no object available, will create a new object.
+          */
+          fun onTake(`object`: Foo) {
+          }
     
-            /**
-             * Called when a new instance is created
-             */
-            @Override
-            public
-            T create() {
-                return new Object();
-            }
+          /**
+           * @return a new object instance created by the pool.
+           */
+          override fun newInstance(): Foo {
+            return Foo();
+          }
         });
-        
-        
 
-    /**
-     * Takes an object from the pool. If the pool is a {@link BlockingPool}, this will wait until an item is available in
-     * the pool.
-     * <p/>
-     * This method catches {@link InterruptedException} and discards it silently.
-     */
-    T take();
 
-    /**
-     * Takes an object from the pool. If the pool is a {@link BlockingPool}, this will wait until an item is available in the pool.
-     */
-    T takeInterruptibly() throws InterruptedException;
-
-    /**
-     * Return object to the pool. If the pool is a {@link BlockingPool}, this will wake the threads that have blocked during take/takeInterruptibly()
-     */
-    void put(T object);
-
-    /**
-     * @return a new object instance created by the pool.
-     */
-    T newInstance();
+    val foo = pool.take()
+    pool.put(foo)
 ```
 
 &nbsp; 
@@ -76,7 +51,7 @@ Maven Info
     <dependency>
       <groupId>com.dorkbox</groupId>
       <artifactId>ObjectPool</artifactId>
-      <version>2.11</version>
+      <version>3.0</version>
     </dependency>
 </dependencies>
 ```
@@ -86,15 +61,12 @@ Gradle Info
 ````
 dependencies {
     ...
-    compile 'com.dorkbox:ObjectPool:2.11'
+    compile 'com.dorkbox:ObjectPool:3.0'
 }
 ````
 
-Or if you don't want to use Maven, you can access the files directly here:  
-https://repo1.maven.org/maven2/com/dorkbox/ObjectPool/
-
-
 License
 ---------
-This project is © 2014 dorkbox llc, and is distributed under the terms of the Apache v2.0 License. See file "LICENSE" for further references.
+This project is © 2020 dorkbox llc, and is distributed under the terms of the Apache v2.0 License. See file "LICENSE" for further
+ references.
 

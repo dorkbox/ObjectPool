@@ -29,14 +29,15 @@ interface Pool<T> {
     fun take(): T
 
     /**
-     * Takes an object from the pool. If the pool is a [BlockingPool], this will wait until an item is available in the pool.
+     * Takes an object from the pool. If the pool is a [BlockingPool], this will wait until an item is available in
+     * the pool, catching [InterruptedException].
      *
      * @throws InterruptedException
      */
     fun takeInterruptibly(): T
 
     /**
-     * Return object to the pool. If the pool is a [BlockingPool], this will wake the threads that have blocked during take/takeInterruptibly()
+     * Return object to the pool. If the pool is a [BlockingPool] or [SuspendingPool], this will wake the threads that have blocked during take/takeInterruptibly()
      */
     fun put(`object`: T)
 

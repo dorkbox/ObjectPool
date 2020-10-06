@@ -15,21 +15,23 @@
  */
 package dorkbox.objectPool.suspending
 
+import dorkbox.objectPool.Pool
 import dorkbox.objectPool.SuspendingPool
 import dorkbox.objectPool.SuspendingPoolObject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 
 /**
- * A blocking, suspending pool of a specific size, where the entire pool is initially filled, and when the pool
- * is empty, a [Pool.take] will wait for a corresponding [Pool.put].
+ * A suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty,
+ * a [Pool.take] will wait for a corresponding [Pool.put].
  *
  * @author dorkbox, llc
  */
-internal class SuspendingPool<T> internal constructor(
+internal class SuspendingPool<T> constructor(
         private val poolObject: SuspendingPoolObject<T>,
-        private val channel: Channel<T>,
         size: Int) : SuspendingPool<T> {
+
+    private val channel = Channel<T>(size)
 
     init {
         runBlocking {

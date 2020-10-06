@@ -15,15 +15,18 @@
  */
 package dorkbox.objectPool.nonBlocking
 
+import dorkbox.objectPool.ObjectPool
 import dorkbox.objectPool.Pool
 import dorkbox.objectPool.PoolObject
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
- * A non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created. The items in the
- * pool will never expire or be automatically garbage collected. (see [ObjectPool.NonBlockingSoftReference] for pooled objects
- * that will expire/GC as needed).
+ * A non-blocking pool which will grow as much as needed. If the pool is empty, new objects will be created.
+ *
+ * The items in the pool will never expire or be automatically garbage collected.
+ *
+ * (see [ObjectPool.nonBlockingSoftReference] for pooled objects that will expire/GC as needed).
  *
  * @author dorkbox, llc
  */
@@ -31,26 +34,15 @@ internal class NonBlockingPool<T>(
         private val poolObject: PoolObject<T>,
         private val queue: Queue<T> = ConcurrentLinkedQueue()) : Pool<T> {
 
-
     /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
-     *
-     * This method catches [InterruptedException] and discards it silently.
+     * Takes an object from the pool, if there is no object available, will create a new object.
      */
     override fun take(): T {
-        return try {
-            takeInterruptibly()
-        } catch (e: InterruptedException) {
-            val newInstance = newInstance()
-            poolObject.onTake(newInstance)
-            newInstance
-        }
+        return takeInterruptibly()
     }
 
     /**
-     * Takes an object from the pool, Blocks until an item is available in the pool.
-     *
-     * @throws InterruptedException
+     * Takes an object from the pool, if there is no object available, will create a new object.
      */
     override fun takeInterruptibly(): T {
         var take = queue.poll()
@@ -63,7 +55,7 @@ internal class NonBlockingPool<T>(
     }
 
     /**
-     * Return object to the pool, waking the threads that have blocked during take()
+     * Return object to the pool
      */
     override fun put(`object`: T) {
         poolObject.onReturn(`object`)
