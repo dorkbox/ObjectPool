@@ -26,7 +26,7 @@ class BlockingTest {
     fun blockingTest() {
         val pobj = object : PoolObject<String>() {
             override fun newInstance(): String {
-               return ""
+                return ""
             }
         }
 
@@ -44,7 +44,7 @@ class BlockingTest {
     fun nonblockingTest() {
         val pobj = object : PoolObject<String>() {
             override fun newInstance(): String {
-               return ""
+                return ""
             }
         }
 
@@ -55,6 +55,37 @@ class BlockingTest {
         val take2 = pool.take()
         val take3 = pool.take()
         val take4 = pool.take() // this does not block
+    }
+
+    @Test
+    fun nonBlockingBoundedTest() {
+        var removed = 0
+
+        val pobj = object : BoundedPoolObject<String>() {
+            override fun onRemoval(`object`: String) {
+                removed++
+            }
+
+            override fun newInstance(): String {
+                return ""
+            }
+        }
+
+        val pool = ObjectPool.nonBlockingBounded(pobj, 2)
+
+        val take = pool.take()
+        val take1 = pool.take()
+        val take2 = pool.take()
+        val take3 = pool.take()
+        val take4 = pool.take() // this does not block
+
+        pool.put(take)
+        pool.put(take1)
+        pool.put(take2)
+        pool.put(take3)
+        pool.put(take4)
+
+        Assert.assertEquals(3, removed)
     }
 
     @Test
