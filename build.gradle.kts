@@ -32,7 +32,7 @@ plugins {
 
     id("com.dorkbox.GradleUtils") version "1.12"
     id("com.dorkbox.Licensing") version "2.5.2"
-    id("com.dorkbox.VersionUpdate") version "2.0"
+    id("com.dorkbox.VersionUpdate") version "2.0.4"
     id("com.dorkbox.GradlePublish") version "1.8"
     id("com.dorkbox.GradleModuleInfo") version "1.1"
 
@@ -44,7 +44,7 @@ object Extras {
     const val group = "com.dorkbox"
     const val name = "ObjectPool"
     const val id = "ObjectPool"
-    const val version = "3.0"
+    const val version = "3.1"
 
     const val vendor = "Dorkbox LLC"
     const val vendorUrl = "https://dorkbox.com"

@@ -51,17 +51,17 @@ Maven Info
     <dependency>
       <groupId>com.dorkbox</groupId>
       <artifactId>ObjectPool</artifactId>
-      <version>3.0</version>
+      <version>3.1</version>
     </dependency>
 </dependencies>
 ```
 
 Gradle Info
 ---------
-````
+```
 dependencies {
     ...
-    compile 'com.dorkbox:ObjectPool:3.0'
+    implementation "com.dorkbox:ObjectPool:3.1"
 }
 ````
 
