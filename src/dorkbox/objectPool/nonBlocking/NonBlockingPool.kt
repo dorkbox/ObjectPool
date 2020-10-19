@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
  *
  * @author dorkbox, llc
  */
-internal class NonBlockingPool<T>(
+internal open class NonBlockingPool<T>(
         private val poolObject: PoolObject<T>,
         private val queue: Queue<T> = ConcurrentLinkedQueue()) : Pool<T> {
 
@@ -47,7 +47,7 @@ internal class NonBlockingPool<T>(
     override fun takeInterruptibly(): T {
         var take = queue.poll()
         if (take == null) {
-            take = poolObject.newInstance()
+            take = newInstance()
         }
         poolObject.onTake(take)
 
