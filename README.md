@@ -30,7 +30,7 @@ Usage:
            * @return a new object instance created by the pool.
            */
           override fun newInstance(): Foo {
-            return Foo();
+             return Foo();
           }
         });
 
