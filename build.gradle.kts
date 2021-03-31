@@ -30,17 +30,17 @@ gradle.startParameter.warningMode = WarningMode.All
 plugins {
     java
 
-    id("com.dorkbox.GradleUtils") version "1.12"
-    id("com.dorkbox.Licensing") version "2.5.2"
-    id("com.dorkbox.VersionUpdate") version "2.0.4"
-    id("com.dorkbox.GradlePublish") version "1.8"
+    id("com.dorkbox.GradleUtils") version "1.16"
+    id("com.dorkbox.Licensing") version "2.5.5"
+    id("com.dorkbox.VersionUpdate") version "2.1"
+    id("com.dorkbox.GradlePublish") version "1.10"
     id("com.dorkbox.GradleModuleInfo") version "1.1"
 
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.32"
 }
 
 object Extras {
-    const val description = "Fast, lightweight, and compatible blocking/non-blocking/soft-reference object pool for Java 6+"
+    const val description = "Fast, lightweight, and compatible blocking/non-blocking/soft-reference object pool for Java 8+"
     const val group = "com.dorkbox"
     const val name = "ObjectPool"
     const val id = "ObjectPool"
@@ -52,7 +52,7 @@ object Extras {
 
     val buildDate = Instant.now().toString()
 
-    const val coroutineVer = "1.3.9"
+    const val coroutineVer = "1.4.2"
 }
 
 ///////////////////////////////
@@ -61,7 +61,7 @@ object Extras {
 GradleUtils.load("$projectDir/../../gradle.properties", Extras)
 GradleUtils.fixIntellijPaths()
 GradleUtils.defaultResolutionStrategy()
-GradleUtils.compileConfiguration(JavaVersion.VERSION_11)
+GradleUtils.compileConfiguration(JavaVersion.VERSION_1_8)
 
 
 licensing {
@@ -123,7 +123,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:1.7.30")
     implementation("com.conversantmedia:disruptor:1.2.19")
 
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.2")
 }
 
 
