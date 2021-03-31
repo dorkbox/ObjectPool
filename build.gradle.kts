@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2021 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ object Extras {
     const val group = "com.dorkbox"
     const val name = "ObjectPool"
     const val id = "ObjectPool"
-    const val version = "3.1"
+    const val version = "3.2"
 
     const val vendor = "Dorkbox LLC"
     const val vendorUrl = "https://dorkbox.com"

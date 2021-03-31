@@ -32,7 +32,7 @@ object ObjectPool {
     /**
      * Gets the version number.
      */
-    const val version = "3.1"
+    const val version = "3.2"
 
     /**
      * Creates a suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
