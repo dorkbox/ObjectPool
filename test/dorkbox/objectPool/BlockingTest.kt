@@ -20,6 +20,7 @@ import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 
+@Suppress("UNUSED_VARIABLE")
 @Ignore
 class BlockingTest {
     @Test
