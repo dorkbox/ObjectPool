@@ -23,7 +23,8 @@ import dorkbox.objectPool.nonBlocking.NonBlockingSoftPool
 import dorkbox.objectPool.suspending.SuspendingPool
 import java.lang.ref.SoftReference
 import java.util.*
-import java.util.concurrent.*
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * @author dorkbox, llc
@@ -32,7 +33,12 @@ object ObjectPool {
     /**
      * Gets the version number.
      */
-    const val version = "3.2"
+    const val version = "3.3"
+
+    init {
+        // Add this project to the updates system, which verifies this class + UUID + version information
+        dorkbox.updates.Updates.add(ObjectPool::class.java, "1dc60a2801d941cba9c7964255d8b061", version)
+    }
 
     /**
      * Creates a suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a

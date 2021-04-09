@@ -116,7 +116,7 @@ tasks.jar.get().apply {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("com.dorkbox:Updates:1.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Extras.coroutineVer}")
 
