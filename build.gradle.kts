@@ -30,9 +30,9 @@ gradle.startParameter.warningMode = WarningMode.All
 plugins {
     java
 
-    id("com.dorkbox.GradleUtils") version "1.16"
+    id("com.dorkbox.GradleUtils") version "1.17"
     id("com.dorkbox.Licensing") version "2.5.5"
-    id("com.dorkbox.VersionUpdate") version "2.1"
+    id("com.dorkbox.VersionUpdate") version "2.3"
     id("com.dorkbox.GradlePublish") version "1.10"
     id("com.dorkbox.GradleModuleInfo") version "1.1"
 
@@ -44,7 +44,7 @@ object Extras {
     const val group = "com.dorkbox"
     const val name = "ObjectPool"
     const val id = "ObjectPool"
-    const val version = "3.2"
+    const val version = "3.3"
 
     const val vendor = "Dorkbox LLC"
     const val vendorUrl = "https://dorkbox.com"
