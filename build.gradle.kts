@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import dorkbox.gradle.kotlin
 import java.time.Instant
 
 
@@ -25,18 +24,14 @@ import java.time.Instant
 ///////////////////////////////
 
 gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS   // always show the stacktrace!
-gradle.startParameter.warningMode = WarningMode.All
 
 plugins {
-    java
-
-    id("com.dorkbox.GradleUtils") version "1.17"
-    id("com.dorkbox.Licensing") version "2.5.5"
+    id("com.dorkbox.GradleUtils") version "2.6"
+    id("com.dorkbox.Licensing") version "2.7"
     id("com.dorkbox.VersionUpdate") version "2.3"
-    id("com.dorkbox.GradlePublish") version "1.10"
-    id("com.dorkbox.GradleModuleInfo") version "1.1"
+    id("com.dorkbox.GradlePublish") version "1.11"
 
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.0"
 }
 
 object Extras {
@@ -44,7 +39,7 @@ object Extras {
     const val group = "com.dorkbox"
     const val name = "ObjectPool"
     const val id = "ObjectPool"
-    const val version = "3.3"
+    const val version = "3.4"
 
     const val vendor = "Dorkbox LLC"
     const val vendorUrl = "https://dorkbox.com"
@@ -59,9 +54,9 @@ object Extras {
 /////  assign 'Extras'
 ///////////////////////////////
 GradleUtils.load("$projectDir/../../gradle.properties", Extras)
-GradleUtils.fixIntellijPaths()
-GradleUtils.defaultResolutionStrategy()
+GradleUtils.defaults()
 GradleUtils.compileConfiguration(JavaVersion.VERSION_1_8)
+GradleUtils.jpms(JavaVersion.VERSION_1_9)
 
 
 licensing {
@@ -71,32 +66,6 @@ licensing {
         url(Extras.url)
     }
 }
-
-sourceSets {
-    main {
-        kotlin {
-            setSrcDirs(listOf("src"))
-
-            // want to include kotlin files for the source. 'setSrcDirs' resets includes...
-            include("**/*.kt")
-        }
-    }
-
-    test {
-        kotlin {
-            setSrcDirs(listOf("test"))
-
-            // want to include java files for the source. 'setSrcDirs' resets includes...
-            include("**/*.java", "**/*.kt")
-        }
-    }
-}
-
-repositories {
-    mavenLocal() // this must be first!
-    jcenter()
-}
-
 
 tasks.jar.get().apply {
     manifest {
@@ -110,17 +79,14 @@ tasks.jar.get().apply {
         attributes["Implementation-Title"] = "${Extras.group}.${Extras.id}"
         attributes["Implementation-Version"] = Extras.buildDate
         attributes["Implementation-Vendor"] = Extras.vendor
-
-        attributes["Automatic-Module-Name"] = Extras.id
     }
 }
 
 dependencies {
-    implementation("com.dorkbox:Updates:1.0")
+    implementation("com.dorkbox:Updates:1.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Extras.coroutineVer}")
 
-    implementation("org.slf4j:slf4j-api:1.7.30")
     implementation("com.conversantmedia:disruptor:1.2.19")
 
     testImplementation("junit:junit:4.13.2")

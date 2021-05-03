@@ -19,12 +19,6 @@
        Copyright 2021
          JetBrains s.r.o.
 
-     - SLF4J - Simple facade or abstraction for various logging frameworks
-       [MIT License]
-       http://www.slf4j.org
-       Copyright 2021
-         QOS.ch
-
      - Conversant Disruptor - Disruptor is the highest performing intra-thread transfer mechanism available in Java.
        [The Apache Software License, Version 2.0]
        https://github.com/conversant/disruptor
@@ -45,9 +39,3 @@
              JetBrains s.r.o. and Kotlin Programming Language contributors
            Kotlin Compiler, Test Data+Libraries, and Tools repository contain third-party code, to which different licenses may apply
            See: https://github.com/JetBrains/kotlin/blob/master/license/README.md
-
-         - PropertyLoader - Property annotation and loader for fields
-           [The Apache Software License, Version 2.0]
-           https://git.dorkbox.com/dorkbox/PropertyLoader
-           Copyright 2021
-             Dorkbox LLC
