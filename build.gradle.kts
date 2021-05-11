@@ -26,7 +26,7 @@ import java.time.Instant
 gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS   // always show the stacktrace!
 
 plugins {
-    id("com.dorkbox.GradleUtils") version "2.6"
+    id("com.dorkbox.GradleUtils") version "2.8"
     id("com.dorkbox.Licensing") version "2.7"
     id("com.dorkbox.VersionUpdate") version "2.3"
     id("com.dorkbox.GradlePublish") version "1.11"
@@ -47,7 +47,7 @@ object Extras {
 
     val buildDate = Instant.now().toString()
 
-    const val coroutineVer = "1.4.2"
+    const val coroutineVer = "1.4.3"
 }
 
 ///////////////////////////////
