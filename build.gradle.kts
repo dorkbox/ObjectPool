@@ -27,11 +27,11 @@ gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS   // always show th
 
 plugins {
     id("com.dorkbox.GradleUtils") version "2.16"
-    id("com.dorkbox.Licensing") version "2.10"
+    id("com.dorkbox.Licensing") version "2.12"
     id("com.dorkbox.VersionUpdate") version "2.4"
-    id("com.dorkbox.GradlePublish") version "1.11"
+    id("com.dorkbox.GradlePublish") version "1.12"
 
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm") version "1.6.10"
 }
 
 object Extras {
@@ -39,15 +39,13 @@ object Extras {
     const val group = "com.dorkbox"
     const val name = "ObjectPool"
     const val id = "ObjectPool"
-    const val version = "3.4"
+    const val version = "3.5"
 
     const val vendor = "Dorkbox LLC"
     const val vendorUrl = "https://dorkbox.com"
     const val url = "https://git.dorkbox.com/dorkbox/ObjectPool"
 
     val buildDate = Instant.now().toString()
-
-    const val coroutineVer = "1.4.3"
 }
 
 ///////////////////////////////
@@ -83,11 +81,11 @@ tasks.jar.get().apply {
 }
 
 dependencies {
-    implementation("com.dorkbox:Updates:1.1")
+    api("com.dorkbox:Updates:1.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Extras.coroutineVer}")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
 
-    implementation("com.conversantmedia:disruptor:1.2.19")
+    api("com.conversantmedia:disruptor:1.2.19")
 
     testImplementation("junit:junit:4.13.2")
 }

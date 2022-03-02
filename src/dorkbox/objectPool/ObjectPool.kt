@@ -33,7 +33,7 @@ object ObjectPool {
     /**
      * Gets the version number.
      */
-    const val version = "3.4"
+    const val version = "3.5"
 
     init {
         // Add this project to the updates system, which verifies this class + UUID + version information
