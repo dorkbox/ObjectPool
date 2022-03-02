@@ -38,7 +38,7 @@ internal class SuspendingPool<T> constructor(
             for (x in 0 until size) {
                 val e = newInstance()
                 poolObject.onReturn(e)
-                channel.offer(e)
+                channel.trySend(e)
             }
         }
     }
