@@ -48,7 +48,7 @@ internal class BoundedNonBlockingPool<T>(
         } else {
             currentSize.decrementAndGet()
 
-            poolObject.onRemoval(`object`)
+            poolObject.onRemove(`object`)
         }
     }
 
