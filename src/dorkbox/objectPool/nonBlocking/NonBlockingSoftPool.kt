@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 internal class NonBlockingSoftPool<T>(
         private val poolObject: PoolObject<T>,
-        private val queue: Queue<SoftReference<T>> = ConcurrentLinkedQueue()) : Pool<T> {
+        private val queue: Queue<SoftReference<T>>) : Pool<T> {
 
     /**
      * Takes an object from the pool, if there is no object available, will create a new object.

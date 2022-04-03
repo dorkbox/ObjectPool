@@ -18,7 +18,6 @@ package dorkbox.objectPool.suspending
 import dorkbox.objectPool.Pool
 import dorkbox.objectPool.SuspendingPool
 import dorkbox.objectPool.SuspendingPoolObject
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -29,16 +28,15 @@ import kotlinx.coroutines.runBlocking
  */
 internal class SuspendingPool<T> constructor(
         private val poolObject: SuspendingPoolObject<T>,
-        size: Int) : SuspendingPool<T> {
-
-    private val channel = Channel<T>(size)
+        size: Int,
+        private val queue: SuspendingQueue<T>) : SuspendingPool<T> {
 
     init {
         runBlocking {
             for (x in 0 until size) {
                 val e = newInstance()
                 poolObject.onReturn(e)
-                channel.trySend(e)
+                queue.offer(e)
             }
         }
     }
@@ -64,7 +62,7 @@ internal class SuspendingPool<T> constructor(
      * @throws InterruptedException
      */
     override suspend fun takeInterruptibly(): T {
-        val take = channel.receive()
+        val take = queue.take()
         poolObject.onTake(take)
 
         return take
@@ -75,7 +73,7 @@ internal class SuspendingPool<T> constructor(
      */
     override suspend fun put(`object`: T) {
         poolObject.onReturn(`object`)
-        channel.send(`object`)
+        queue.put(`object`)
     }
 
     /**

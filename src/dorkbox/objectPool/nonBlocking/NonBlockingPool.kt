@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 internal open class NonBlockingPool<T>(
         private val poolObject: PoolObject<T>,
-        private val queue: Queue<T> = ConcurrentLinkedQueue()) : Pool<T> {
+        private val queue: Queue<T>) : Pool<T> {
 
     /**
      * Takes an object from the pool, if there is no object available, will create a new object.

@@ -20,11 +20,12 @@ import dorkbox.objectPool.blocking.BlockingPool
 import dorkbox.objectPool.nonBlocking.BoundedNonBlockingPool
 import dorkbox.objectPool.nonBlocking.NonBlockingPool
 import dorkbox.objectPool.nonBlocking.NonBlockingSoftPool
+import dorkbox.objectPool.suspending.ChannelQueue
 import dorkbox.objectPool.suspending.SuspendingPool
+import dorkbox.objectPool.suspending.SuspendingQueue
 import java.lang.ref.SoftReference
 import java.util.*
-import java.util.concurrent.BlockingQueue
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.*
 
 /**
  * @author dorkbox, llc
@@ -51,8 +52,24 @@ object ObjectPool {
      * @return a suspending pool using the kotlin Channel implementation of a specific size
      */
     fun <T> suspending(poolObject: SuspendingPoolObject<T>, size: Int): dorkbox.objectPool.SuspendingPool<T> {
-        return SuspendingPool(poolObject, size)
+        return suspending(poolObject, size, ChannelQueue(size))
     }
+
+
+    /**
+     * Creates a suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
+     * [Pool.take] will wait for a corresponding [Pool.put].
+     *
+     * @param poolObject controls the lifecycle of the pooled objects.
+     * @param size the size of the pool to create
+     * @param <T> the type of object used in the pool
+     *
+     * @return a suspending pool using the kotlin Channel implementation of a specific size
+     */
+    fun <T> suspending(poolObject: SuspendingPoolObject<T>, size: Int, queue: SuspendingQueue<T>): dorkbox.objectPool.SuspendingPool<T> {
+        return SuspendingPool(poolObject, size, queue)
+    }
+
 
     /**
      * Creates a high-performance blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
@@ -95,7 +112,7 @@ object ObjectPool {
      * @return a blocking pool using the default [ConcurrentLinkedQueue] implementation
      */
     fun <T> nonBlocking(poolObject: PoolObject<T>): Pool<T> {
-        return NonBlockingPool(poolObject)
+        return nonBlocking(poolObject, ConcurrentLinkedQueue())
     }
 
     /**
@@ -129,7 +146,7 @@ object ObjectPool {
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
     fun <T> nonBlockingSoftReference(poolObject: PoolObject<T>): Pool<T> {
-        return NonBlockingSoftPool(poolObject)
+        return nonBlockingSoftReference(poolObject, ConcurrentLinkedQueue())
     }
 
     /**
@@ -153,6 +170,7 @@ object ObjectPool {
     /**
      * A non-blocking pool which will create as many objects as much as needed but will only store maxSize in the pool.
      * If the pool is empty, new objects will be created.
+     *
      * The items added to pool will never expire or be automatically garbage collected.
      * The items not added back to the pool will be garbage collected
      *
@@ -162,24 +180,25 @@ object ObjectPool {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    fun <T> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Long): Pool<T> {
-        return BoundedNonBlockingPool(poolObject, maxSize)
+    fun <T> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Int): Pool<T> {
+        return nonBlockingBounded(poolObject, maxSize, DisruptorBlockingQueue(maxSize))
     }
 
     /**
      * A non-blocking pool which will create as many objects as much as needed but will only store maxSize in the pool.
      * If the pool is empty, new objects will be created.
+     *
      * The items added to pool will never expire or be automatically garbage collected.
      * The items not added back to the pool will be garbage collected
      *
      * @param poolObject controls the lifecycle of the pooled objects.
      * @param maxSize controls the maxSize the pool can be
-     * @param queue the  queue implementation to use
+     * @param queue the queue implementation to use
      * @param <T> the type of object used in the pool
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    fun <T> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Long, queue: Queue<T>): Pool<T> {
+    fun <T> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Int, queue: Queue<T>): Pool<T> {
         return BoundedNonBlockingPool(poolObject, maxSize, queue)
     }
 }
