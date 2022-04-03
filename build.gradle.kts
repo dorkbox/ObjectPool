@@ -39,7 +39,7 @@ object Extras {
     const val group = "com.dorkbox"
     const val name = "ObjectPool"
     const val id = "ObjectPool"
-    const val version = "3.5"
+    const val version = "3.6"
 
     const val vendor = "Dorkbox LLC"
     const val vendorUrl = "https://dorkbox.com"
