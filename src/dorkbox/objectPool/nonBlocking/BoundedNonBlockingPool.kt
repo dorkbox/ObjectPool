@@ -39,7 +39,7 @@ internal class BoundedNonBlockingPool<T>(
 
     /**
      * Return object to the pool, waking the threads that have blocked during take()
-     * If current pool size is larger then max size, don't add object back into the pool
+     * If current pool size is larger than max size, don't add object back into the pool
      */
     override fun put(`object`: T) {
         if (currentSize.get() <= maxSize) {
