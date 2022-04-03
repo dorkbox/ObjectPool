@@ -16,6 +16,7 @@
 package dorkbox.objectPool.nonBlocking
 
 import dorkbox.objectPool.BoundedPoolObject
+import dorkbox.objectPool.ObjectPool
 import java.util.*
 import java.util.concurrent.atomic.*
 
@@ -26,7 +27,7 @@ import java.util.concurrent.atomic.*
  * The items added to pool will never expire or be automatically garbage collected.
  * The items not added back to the pool will be garbage collected
  *
- * See [ObjectPool.NonBlockingSoftReference] for pooled objects that will expire/GC as needed
+ * See [ObjectPool.nonBlockingSoftReference] for pooled objects that will expire/GC as needed
  *
  * @author dorkbox, llc; Abinav Janakiraman
  */
