@@ -63,7 +63,7 @@ class BlockingTest {
         var removed = 0
 
         val pobj = object : BoundedPoolObject<String>() {
-            override fun onRemoval(`object`: String) {
+            override fun onRemove(`object`: String) {
                 removed++
             }
 
