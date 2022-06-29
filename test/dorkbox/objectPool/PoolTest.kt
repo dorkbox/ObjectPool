@@ -17,12 +17,11 @@ package dorkbox.objectPool
 
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
-import org.junit.Ignore
 import org.junit.Test
 
 @Suppress("UNUSED_VARIABLE")
-@Ignore
-class BlockingTest {
+class PoolTest {
+
     @Test
     fun blockingTest() {
         val pobj = object : PoolObject<String>() {
@@ -37,8 +36,12 @@ class BlockingTest {
         val take1 = pool.take()
         val take2 = pool.take()
         val take3 = pool.take()
-        val take4 = pool.take() // this blocks
-        Assert.fail("shouldn't get here")
+//        val take4 = pool.take() // this blocks
+//        Assert.fail("shouldn't get here")
+
+        pool.put(take2)
+        val take4 = pool.take()
+        Assert.assertEquals(take2, take4)
     }
 
     @Test
@@ -110,6 +113,44 @@ class BlockingTest {
             pool.put(take3)
 
             Assert.assertTrue(pool.take() === take3)
+        }
+    }
+
+    @Test
+    fun collectionBlockingTest() {
+        val collection = listOf(1, 2, 3, 4)
+
+        val pool = ObjectPool.blocking(collection)
+
+        val take = pool.take()
+        val take1 = pool.take()
+        val take2 = pool.take()
+        val take3 = pool.take()
+//        val take4 = pool.take() // this suspends
+//        Assert.fail("shouldn't get here")
+
+        pool.put(take2)
+        val take4 = pool.take()
+        Assert.assertEquals(take2, take4)
+    }
+
+    @Test
+    fun collectionSuspendTest() {
+        val collection = listOf(1, 2, 3, 4)
+
+        val pool = ObjectPool.suspending(collection)
+
+        runBlocking {
+            val take = pool.take()
+            val take1 = pool.take()
+            val take2 = pool.take()
+            val take3 = pool.take()
+//            val take4 = pool.take() // this suspends
+//            Assert.fail("shouldn't get here")
+
+            pool.put(take2)
+            val take4 = pool.take()
+            Assert.assertEquals(take2, take4)
         }
     }
 }

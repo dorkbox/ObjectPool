@@ -17,11 +17,13 @@ package dorkbox.objectPool
 
 import com.conversantmedia.util.concurrent.DisruptorBlockingQueue
 import dorkbox.objectPool.blocking.BlockingPool
+import dorkbox.objectPool.blocking.BlockingPoolCollection
 import dorkbox.objectPool.nonBlocking.BoundedNonBlockingPool
 import dorkbox.objectPool.nonBlocking.NonBlockingPool
 import dorkbox.objectPool.nonBlocking.NonBlockingSoftPool
 import dorkbox.objectPool.suspending.ChannelQueue
 import dorkbox.objectPool.suspending.SuspendingPool
+import dorkbox.objectPool.suspending.SuspendingPoolCollection
 import dorkbox.objectPool.suspending.SuspendingQueue
 import java.lang.ref.SoftReference
 import java.util.*
@@ -69,7 +71,6 @@ object ObjectPool {
     fun <T> suspending(poolObject: SuspendingPoolObject<T>, size: Int, queue: SuspendingQueue<T>): dorkbox.objectPool.SuspendingPool<T> {
         return SuspendingPool(poolObject, size, queue)
     }
-
 
     /**
      * Creates a high-performance blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
@@ -200,5 +201,67 @@ object ObjectPool {
      */
     fun <T> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Int, queue: Queue<T>): Pool<T> {
         return BoundedNonBlockingPool(poolObject, maxSize, queue)
+    }
+
+
+
+
+
+
+
+
+
+    /**
+     * Creates a suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
+     * [Pool.take] will wait for a corresponding [Pool.put].
+     *
+     * @param poolObject controls the lifecycle of the pooled objects.
+     * @param size the size of the pool to create
+     * @param <T> the type of object used in the pool
+     *
+     * @return a suspending pool using the kotlin Channel implementation of a specific size
+     */
+    fun <T> suspending(collection: Collection<T>): dorkbox.objectPool.SuspendingPool<T> {
+        return suspending(ChannelQueue(collection.size), collection)
+    }
+
+    /**
+     * Creates a suspending pool of an existing collection, where the entire pool is initially filled, and when the pool is empty, a
+     * [Pool.take] will wait for a corresponding [Pool.put].
+     *
+     * @param collection the existing collection to convert to a pool
+     * @param <T> the type of object used in the pool
+     *
+     * @return a suspending pool using the kotlin Channel implementation of a specific size
+     */
+    fun <T> suspending(queue: SuspendingQueue<T>, collection: Collection<T>): dorkbox.objectPool.SuspendingPool<T> {
+        return SuspendingPoolCollection(queue, collection)
+    }
+
+    /**
+     * Creates a high-performance blocking pool of an existing collection, where the entire pool is initially filled, and when the pool is empty, a
+     * [Pool.take] will wait for a corresponding [Pool.put].
+     *
+     * @param collection the existing collection to convert to a pool
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the DisruptorBlockingQueue implementation of a specific size
+     */
+    fun <T> blocking(collection: Collection<T>): Pool<T> {
+        return blocking(DisruptorBlockingQueue(collection.size), collection)
+    }
+
+    /**
+     * Creates a blocking pool from an existing collection, where the entire pool is initially filled, and when the pool is empty, a
+     * [Pool.take] will wait for a corresponding [Pool.put].
+     *
+     * @param queue the blocking queue implementation to use
+     * @param collection the existing collection to convert to a pool
+     * @param <T> the type of object used in the pool
+     *
+     * @return a blocking pool using the specified [BlockingQueue] implementation of a specific size
+     */
+    fun <T> blocking(queue: BlockingQueue<T>, collection: Collection<T>): Pool<T> {
+        return BlockingPoolCollection(queue, collection)
     }
 }
