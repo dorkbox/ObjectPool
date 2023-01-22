@@ -1,20 +1,20 @@
  - ObjectPool - Fast, lightweight, and compatible blocking/non-blocking/soft-reference object pool for Java 8+
    [The Apache Software License, Version 2.0]
    https://git.dorkbox.com/dorkbox/ObjectPool
-   Copyright 2022
+   Copyright 2023
      Dorkbox LLC
 
    Extra license information
      - kotlinx.coroutines - Library support for Kotlin coroutines with multiplatform support
        [The Apache Software License, Version 2.0]
        https://github.com/Kotlin/kotlinx.coroutines
-       Copyright 2022
+       Copyright 2023
          JetBrains s.r.o.
 
      - Conversant Disruptor - Disruptor is the highest performing intra-thread transfer mechanism available in Java.
        [The Apache Software License, Version 2.0]
        https://github.com/conversant/disruptor
-       Copyright 2022
+       Copyright 2023
          Conversant, Inc
 
      - Kotlin - 
