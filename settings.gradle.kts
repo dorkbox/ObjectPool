@@ -13,3 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// Sort via the number of other dorkbox dependencies
+rootProject.name = "1 - ${rootProject.name}"

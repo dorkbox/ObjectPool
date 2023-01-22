@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ tasks.jar.get().apply {
 }
 
 dependencies {
-    api("com.dorkbox:Updates:1.1")
+    implementation("com.dorkbox:Updates:1.1")
 
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
 
