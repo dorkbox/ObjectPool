@@ -1,12 +1,10 @@
 module dorkbox.objectpool {
     exports dorkbox.objectPool;
 
-    requires dorkbox.updates;
+    requires transitive dorkbox.updates;
 
-    requires com.conversantmedia.disruptor;
+    requires transitive com.conversantmedia.disruptor;
 
-    requires kotlinx.coroutines.core.jvm;
-    requires kotlin.stdlib;
-
-    requires java.base;
+    requires transitive kotlinx.coroutines.core.jvm;
+    requires transitive kotlin.stdlib;
 }
