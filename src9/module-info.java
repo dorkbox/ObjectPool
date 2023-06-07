@@ -5,6 +5,6 @@ module dorkbox.objectpool {
 
     requires transitive com.conversantmedia.disruptor;
 
-    requires transitive kotlinx.coroutines.core.jvm;
+    requires transitive kotlinx.coroutines.core;
     requires transitive kotlin.stdlib;
 }
