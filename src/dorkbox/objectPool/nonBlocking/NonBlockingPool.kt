@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,5 +66,12 @@ internal open class NonBlockingPool<T>(
      */
     override fun newInstance(): T {
         return poolObject.newInstance()
+    }
+
+    /**
+     * Clears the underlying queue implementation
+     */
+    override fun close() {
+        queue.clear()
     }
 }

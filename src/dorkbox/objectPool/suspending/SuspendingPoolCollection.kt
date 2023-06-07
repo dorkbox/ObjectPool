@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,5 +73,12 @@ internal class SuspendingPoolCollection<T> constructor(
      */
     override suspend fun newInstance(): T {
         return dummyValue
+    }
+
+    /**
+     * Closes the underlying queue implementation
+     */
+    override fun close() {
+        queue.close()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,4 +89,9 @@ interface SuspendingQueue<E> {
      * @return the head of this queue, or {@code null} if this queue is empty
      */
     fun poll(): E?
+
+    /**
+     * Closes the underlying implementation
+     */
+    fun close()
 }

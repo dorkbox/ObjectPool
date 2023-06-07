@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,4 +43,9 @@ interface SuspendingPool<T> {
      * @return a new object instance created by the pool.
      */
     suspend fun newInstance(): T
+
+    /**
+     * Closes the underlying implementation
+     */
+    fun close()
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,5 +54,9 @@ class ChannelQueue<E>(size: Int): SuspendingQueue<E> {
 
     override suspend fun take(): E {
         return channel.receive()
+    }
+
+    override fun close() {
+        channel.close()
     }
 }
