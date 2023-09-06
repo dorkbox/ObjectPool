@@ -48,7 +48,9 @@ internal class SuspendingPool<T: Any>(
      */
     override suspend fun take(): T {
         return try {
-            takeInterruptibly()
+            val take = queue.take()
+            poolObject.onTake(take)
+            take
         } catch (e: InterruptedException) {
             val newInstance = newInstance()
             poolObject.onTake(newInstance)
@@ -74,6 +76,14 @@ internal class SuspendingPool<T: Any>(
     override suspend fun put(`object`: T) {
         poolObject.onReturn(`object`)
         queue.put(`object`)
+    }
+
+    /**
+     * Return object to the pool, blocking if necessary, and waking the threads that have suspended during take()
+     */
+    override fun putBlocking(`object`: T) {
+        poolObject.onReturnBlocking(`object`)
+        queue.putBlocking(`object`)
     }
 
     /**

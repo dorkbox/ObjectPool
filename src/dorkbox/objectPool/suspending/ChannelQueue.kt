@@ -17,29 +17,30 @@
 package dorkbox.objectPool.suspending
 
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.trySendBlocking
 
 /**
  * Wraps a Kotlin channel into a LIMITED queue implementations
  */
-class ChannelQueue<E>(size: Int): SuspendingQueue<E> {
+internal class ChannelQueue<E: Any>(size: Int): SuspendingQueue<E> {
     private val channel = Channel<E>(size)
 
-    override fun offer(element: E): Boolean {
+    override inline fun offer(element: E): Boolean {
         val result = channel.trySend(element)
         return result.isSuccess
     }
 
-    override fun remove(): E {
+    override inline fun remove(): E {
         val tryReceive = channel.tryReceive()
         return tryReceive.getOrNull() ?: throw NoSuchElementException("Channel is empty")
     }
 
-    override fun poll(): E? {
+    override inline fun poll(): E? {
         val tryReceive = channel.tryReceive()
         return tryReceive.getOrNull()
     }
 
-    override fun add(element: E): Boolean {
+    override inline fun add(element: E): Boolean {
         val result = channel.trySend(element)
         if (result.isSuccess) {
             return true
@@ -48,15 +49,19 @@ class ChannelQueue<E>(size: Int): SuspendingQueue<E> {
         }
     }
 
-    override suspend fun put(element: E) {
+    override suspend inline fun put(element: E) {
         channel.send(element)
     }
 
-    override suspend fun take(): E {
+    override inline fun putBlocking(element: E) {
+        channel.trySendBlocking(element)
+    }
+
+    override inline suspend fun take(): E {
         return channel.receive()
     }
 
-    override fun close() {
+    override inline fun close() {
         channel.close()
     }
 }

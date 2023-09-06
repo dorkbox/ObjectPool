@@ -65,6 +65,18 @@ interface SuspendingQueue<E: Any> {
     suspend fun put(element: E)
 
     /**
+     * Inserts the specified element into this queue, blocking if necessary  for space to become available.
+     *
+     * @param element the element to add
+     * @throws InterruptedException if interrupted while waiting
+     * @throws ClassCastException if the class of the specified element prevents it from being added to this queue
+     * @throws NullPointerException if the specified element is null
+     * @throws IllegalArgumentException if some property of the specified element prevents it from being added to this queue
+     */
+    @Throws(InterruptedException::class)
+    fun putBlocking(element: E)
+
+    /**
      * Retrieves and removes the head of this queue, waiting if necessary until an element becomes available.
      *
      * @return the head of this queue

@@ -22,6 +22,11 @@ abstract class SuspendingPoolObject<T: Any> {
     open suspend fun onReturn(`object`: T) {}
 
     /**
+     * Called when an object is returned to the pool, blocking if necessary. Useful for resetting an objects state, for example.
+     */
+    open fun onReturnBlocking(`object`: T) {}
+
+    /**
      * Called when an object is taken from the pool, useful for setting an objects state, for example.
      */
     open suspend fun onTake(`object`: T) {}

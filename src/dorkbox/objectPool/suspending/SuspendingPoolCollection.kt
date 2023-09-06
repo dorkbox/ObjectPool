@@ -69,6 +69,13 @@ internal class SuspendingPoolCollection<T: Any>(
     }
 
     /**
+     * Return object to the pool, blocking if necessary, and waking the threads that have suspended during take()
+     */
+    override fun putBlocking(`object`: T) {
+        queue.putBlocking(`object`)
+    }
+
+    /**
      * @return a new object instance created by the pool.
      */
     override suspend fun newInstance(): T {
