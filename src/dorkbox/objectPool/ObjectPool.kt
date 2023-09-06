@@ -53,7 +53,7 @@ object ObjectPool {
      *
      * @return a suspending pool using the kotlin Channel implementation of a specific size
      */
-    fun <T> suspending(poolObject: SuspendingPoolObject<T>, size: Int): dorkbox.objectPool.SuspendingPool<T> {
+    fun <T: Any> suspending(poolObject: SuspendingPoolObject<T>, size: Int): dorkbox.objectPool.SuspendingPool<T> {
         return suspending(poolObject, size, ChannelQueue(size))
     }
 
@@ -70,6 +70,7 @@ object ObjectPool {
      */
     fun <T> suspending(poolObject: SuspendingPoolObject<T>, size: Int, queue: SuspendingQueue<T>): dorkbox.objectPool.SuspendingPool<T> {
         return SuspendingPool(poolObject, size, queue)
+    fun <T: Any> suspending(poolObject: SuspendingPoolObject<T>, size: Int, queue: SuspendingQueue<T>): dorkbox.objectPool.SuspendingPool<T> {
     }
 
     /**
@@ -82,7 +83,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the DisruptorBlockingQueue implementation of a specific size
      */
-    fun <T> blocking(poolObject: PoolObject<T>, size: Int): Pool<T> {
+    fun <T: Any> blocking(poolObject: PoolObject<T>, size: Int): Pool<T> {
         return blocking(poolObject, DisruptorBlockingQueue(size), size)
     }
 
@@ -98,6 +99,7 @@ object ObjectPool {
      */
     fun <T> blocking(poolObject: PoolObject<T>, queue: BlockingQueue<T>, size: Int): Pool<T> {
         return BlockingPool(poolObject, queue, size)
+    fun <T: Any> blocking(poolObject: PoolObject<T>, queue: BlockingQueue<T>, size: Int): Pool<T> {
     }
 
     /**
@@ -112,7 +114,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the default [ConcurrentLinkedQueue] implementation
      */
-    fun <T> nonBlocking(poolObject: PoolObject<T>): Pool<T> {
+    fun <T: Any> nonBlocking(poolObject: PoolObject<T>): Pool<T> {
         return nonBlocking(poolObject, ConcurrentLinkedQueue())
     }
 
@@ -129,7 +131,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    fun <T> nonBlocking(poolObject: PoolObject<T>, queue: Queue<T>): Pool<T> {
+    fun <T: Any> nonBlocking(poolObject: PoolObject<T>, queue: Queue<T>): Pool<T> {
         return NonBlockingPool(poolObject, queue)
     }
 
@@ -146,7 +148,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    fun <T> nonBlockingSoftReference(poolObject: PoolObject<T>): Pool<T> {
+    fun <T: Any> nonBlockingSoftReference(poolObject: PoolObject<T>): Pool<T> {
         return nonBlockingSoftReference(poolObject, ConcurrentLinkedQueue())
     }
 
@@ -164,7 +166,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the specified Queue implementation
      */
-    fun <T> nonBlockingSoftReference(poolObject: PoolObject<T>, queue: Queue<SoftReference<T>>): Pool<T> {
+    fun <T: Any> nonBlockingSoftReference(poolObject: PoolObject<T>, queue: Queue<SoftReference<T>>): Pool<T> {
         return NonBlockingSoftPool(poolObject, queue)
     }
 
@@ -181,7 +183,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    fun <T> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Int): Pool<T> {
+    fun <T: Any> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Int): Pool<T> {
         return nonBlockingBounded(poolObject, maxSize, DisruptorBlockingQueue(maxSize))
     }
 
@@ -199,7 +201,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the default ConcurrentLinkedQueue implementation
      */
-    fun <T> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Int, queue: Queue<T>): Pool<T> {
+    fun <T: Any> nonBlockingBounded(poolObject: BoundedPoolObject<T>, maxSize: Int, queue: Queue<T>): Pool<T> {
         return BoundedNonBlockingPool(poolObject, maxSize, queue)
     }
 
@@ -221,7 +223,7 @@ object ObjectPool {
      *
      * @return a suspending pool using the kotlin Channel implementation of a specific size
      */
-    fun <T> suspending(collection: Collection<T>): dorkbox.objectPool.SuspendingPool<T> {
+    fun <T: Any> suspending(collection: Collection<T>): dorkbox.objectPool.SuspendingPool<T> {
         return suspending(ChannelQueue(collection.size), collection)
     }
 
@@ -234,7 +236,7 @@ object ObjectPool {
      *
      * @return a suspending pool using the kotlin Channel implementation of a specific size
      */
-    fun <T> suspending(queue: SuspendingQueue<T>, collection: Collection<T>): dorkbox.objectPool.SuspendingPool<T> {
+    fun <T: Any> suspending(queue: SuspendingQueue<T>, collection: Collection<T>): dorkbox.objectPool.SuspendingPool<T> {
         return SuspendingPoolCollection(queue, collection)
     }
 
@@ -247,7 +249,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the DisruptorBlockingQueue implementation of a specific size
      */
-    fun <T> blocking(collection: Collection<T>): Pool<T> {
+    fun <T: Any> blocking(collection: Collection<T>): Pool<T> {
         return blocking(DisruptorBlockingQueue(collection.size), collection)
     }
 
@@ -261,7 +263,7 @@ object ObjectPool {
      *
      * @return a blocking pool using the specified [BlockingQueue] implementation of a specific size
      */
-    fun <T> blocking(queue: BlockingQueue<T>, collection: Collection<T>): Pool<T> {
+    fun <T: Any> blocking(queue: BlockingQueue<T>, collection: Collection<T>): Pool<T> {
         return BlockingPoolCollection(queue, collection)
     }
 }
