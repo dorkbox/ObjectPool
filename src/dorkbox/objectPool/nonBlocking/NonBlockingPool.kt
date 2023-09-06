@@ -29,7 +29,7 @@ import java.util.*
  *
  * @author dorkbox, llc
  */
-internal open class NonBlockingPool<T>(
+internal open class NonBlockingPool<T: Any>(
         private val poolObject: PoolObject<T>,
         private val queue: Queue<T>) : Pool<T> {
 

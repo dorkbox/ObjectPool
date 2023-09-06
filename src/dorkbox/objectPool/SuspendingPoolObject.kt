@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package dorkbox.objectPool
 
-abstract class SuspendingPoolObject<T> {
+abstract class SuspendingPoolObject<T: Any> {
     /**
      * Called when an object is returned to the pool, useful for resetting an objects state, for example.
      */

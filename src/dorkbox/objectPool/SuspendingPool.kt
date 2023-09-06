@@ -18,7 +18,7 @@ package dorkbox.objectPool
 /**
  * @author dorkbox, llc
  */
-interface SuspendingPool<T> {
+interface SuspendingPool<T: Any> {
     /**
      * Takes an object from the pool. If the pool is a [SuspendingPool], this will wait until an item is available in
      * the pool.

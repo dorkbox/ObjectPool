@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.*
  *
  * @author dorkbox, llc; Abinav Janakiraman
  */
-internal class BoundedNonBlockingPool<T>(
+internal class BoundedNonBlockingPool<T: Any>(
         private val poolObject: BoundedPoolObject<T>,
         private val maxSize: Int,
         private val queue: Queue<T>) : NonBlockingPool<T>(poolObject, queue) {

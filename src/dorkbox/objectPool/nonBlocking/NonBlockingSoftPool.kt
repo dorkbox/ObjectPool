@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
  *
  * @author dorkbox, llc
  */
-internal class NonBlockingSoftPool<T>(
+internal class NonBlockingSoftPool<T: Any>(
         private val poolObject: PoolObject<T>,
         private val queue: Queue<SoftReference<T>>) : Pool<T> {
 

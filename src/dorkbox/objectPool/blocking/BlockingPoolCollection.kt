@@ -24,7 +24,7 @@ import java.util.concurrent.*
  *
  * @author dorkbox, llc
  */
-internal class BlockingPoolCollection<T> constructor(
+internal class BlockingPoolCollection<T: Any>(
         private val queue: BlockingQueue<T>,
         collection: Collection<T>) : Pool<T> {
 

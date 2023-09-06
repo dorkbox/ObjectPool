@@ -25,7 +25,7 @@ import kotlinx.coroutines.runBlocking
  *
  * @author dorkbox, llc
  */
-internal class SuspendingPoolCollection<T> constructor(
+internal class SuspendingPoolCollection<T: Any>(
         private val queue: SuspendingQueue<T>,
         collection: Collection<T>) : SuspendingPool<T> {
 

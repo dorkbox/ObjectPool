@@ -16,13 +16,12 @@
 
 package dorkbox.objectPool.suspending
 
-import java.util.Collection
 import java.util.concurrent.*
 
 /**
  * A limited version of a [BlockingQueue] that suspends instead of blocking
  */
-interface SuspendingQueue<E> {
+interface SuspendingQueue<E: Any> {
     /**
      * Inserts the specified element into this queue if it is possible to do so immediately without violating capacity restrictions, returning
      * `true` upon success and throwing an `IllegalStateException` if no space is currently available.

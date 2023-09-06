@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@ package dorkbox.objectPool
 
 /**
  * @author Abinav Janakiraman
+ * @author dorkbox, llc
  */
-abstract class BoundedPoolObject<T>: PoolObject<T>() {
+abstract class BoundedPoolObject<T: Any>: PoolObject<T>() {
     /**
      * Called when an object is removed from the pool. Useful for logging how many objects are being removed
      */
