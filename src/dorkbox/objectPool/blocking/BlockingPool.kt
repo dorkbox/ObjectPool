@@ -20,7 +20,7 @@ import dorkbox.objectPool.PoolObject
 import java.util.concurrent.BlockingQueue
 
 /**
- * A blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty,
+ * A blocking pool of a specific size, where the entire pool is (optionally) initially filled, and when the pool is empty,
  * a [Pool.take] will wait for a corresponding [Pool.put].
  *
  * @author dorkbox, llc
@@ -28,13 +28,16 @@ import java.util.concurrent.BlockingQueue
 internal class BlockingPool<T: Any>(
         private val poolObject: PoolObject<T>,
         private val queue: BlockingQueue<T>,
-        size: Int) : Pool<T> {
+        size: Int,
+        fillPool: Boolean) : Pool<T> {
 
     init {
-        for (x in 0 until size) {
-            val e = newInstance()
-            poolObject.onReturn(e)
-            queue.offer(e)
+        if (fillPool) {
+            for (x in 0 until size) {
+                val e = newInstance()
+                poolObject.onReturn(e)
+                queue.offer(e)
+            }
         }
     }
 

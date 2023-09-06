@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,14 +47,15 @@ object ObjectPool {
      * Creates a suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
      * [Pool.take] will wait for a corresponding [Pool.put].
      *
-     * @param poolObject controls the lifecycle of the pooled objects.
+     * @param poolObject controls the lifecycle of the pooled objects
      * @param size the size of the pool to create
+     * @param initiallyFillPool true (default) to initially fill the pool with objects
      * @param <T> the type of object used in the pool
      *
      * @return a suspending pool using the kotlin Channel implementation of a specific size
      */
-    fun <T: Any> suspending(poolObject: SuspendingPoolObject<T>, size: Int): dorkbox.objectPool.SuspendingPool<T> {
-        return suspending(poolObject, size, ChannelQueue(size))
+    fun <T: Any> suspending(poolObject: SuspendingPoolObject<T>, size: Int, initiallyFillPool: Boolean = true): dorkbox.objectPool.SuspendingPool<T> {
+        return suspending(poolObject, size, ChannelQueue(size), initiallyFillPool)
     }
 
 
@@ -62,44 +63,46 @@ object ObjectPool {
      * Creates a suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
      * [Pool.take] will wait for a corresponding [Pool.put].
      *
-     * @param poolObject controls the lifecycle of the pooled objects.
+     * @param poolObject controls the lifecycle of the pooled objects
      * @param size the size of the pool to create
+     * @param initiallyFillPool true (default) to initially fill the pool with objects
      * @param <T> the type of object used in the pool
      *
      * @return a suspending pool using the kotlin Channel implementation of a specific size
      */
-    fun <T> suspending(poolObject: SuspendingPoolObject<T>, size: Int, queue: SuspendingQueue<T>): dorkbox.objectPool.SuspendingPool<T> {
-        return SuspendingPool(poolObject, size, queue)
-    fun <T: Any> suspending(poolObject: SuspendingPoolObject<T>, size: Int, queue: SuspendingQueue<T>): dorkbox.objectPool.SuspendingPool<T> {
+    fun <T: Any> suspending(poolObject: SuspendingPoolObject<T>, size: Int, queue: SuspendingQueue<T>, initiallyFillPool: Boolean = true): dorkbox.objectPool.SuspendingPool<T> {
+        return SuspendingPool(poolObject, size, queue, initiallyFillPool)
     }
 
     /**
      * Creates a high-performance blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
      * [Pool.take] will wait for a corresponding [Pool.put].
      *
-     * @param poolObject controls the lifecycle of the pooled objects.
+     * @param poolObject controls the lifecycle of the pooled objects
      * @param size the size of the pool to create
+     * @param initiallyFillPool true (default) to initially fill the pool with objects
      * @param <T> the type of object used in the pool
      *
      * @return a blocking pool using the DisruptorBlockingQueue implementation of a specific size
      */
-    fun <T: Any> blocking(poolObject: PoolObject<T>, size: Int): Pool<T> {
-        return blocking(poolObject, DisruptorBlockingQueue(size), size)
+    fun <T: Any> blocking(poolObject: PoolObject<T>, size: Int, initiallyFillPool: Boolean = true): Pool<T> {
+        return blocking(poolObject, DisruptorBlockingQueue(size), size, initiallyFillPool)
     }
 
     /**
      * Creates a blocking pool of a specific size, where the entire pool is initially filled, and when the pool is empty, a
      * [Pool.take] will wait for a corresponding [Pool.put].
      *
-     * @param poolObject controls the lifecycle of the pooled objects.
+     * @param poolObject controls the lifecycle of the pooled objects
      * @param queue the blocking queue implementation to use
+     * @param size the size of the pool to create
+     * @param initiallyFillPool true (default) to initially fill the pool with objects
      * @param <T> the type of object used in the pool
      *
      * @return a blocking pool using the specified [BlockingQueue] implementation of a specific size
      */
-    fun <T> blocking(poolObject: PoolObject<T>, queue: BlockingQueue<T>, size: Int): Pool<T> {
-        return BlockingPool(poolObject, queue, size)
-    fun <T: Any> blocking(poolObject: PoolObject<T>, queue: BlockingQueue<T>, size: Int): Pool<T> {
+    fun <T: Any> blocking(poolObject: PoolObject<T>, queue: BlockingQueue<T>, size: Int, initiallyFillPool: Boolean = true): Pool<T> {
+        return BlockingPool(poolObject, queue, size, initiallyFillPool)
     }
 
     /**

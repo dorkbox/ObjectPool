@@ -40,6 +40,11 @@ interface SuspendingPool<T: Any> {
     suspend fun put(`object`: T)
 
     /**
+     * Return object to the pool, blocking if necessary. If the pool is a [SuspendingPool], this will wake the threads that have blocked during take/takeInterruptibly()
+     */
+    fun putBlocking(`object`: T)
+
+    /**
      * @return a new object instance created by the pool.
      */
     suspend fun newInstance(): T

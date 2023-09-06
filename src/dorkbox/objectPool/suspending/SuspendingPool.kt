@@ -21,7 +21,7 @@ import dorkbox.objectPool.SuspendingPoolObject
 import kotlinx.coroutines.runBlocking
 
 /**
- * A suspending pool of a specific size, where the entire pool is initially filled, and when the pool is empty,
+ * A suspending pool of a specific size, where the entire pool is (optionally) initially filled, and when the pool is empty,
  * a [Pool.take] will wait for a corresponding [Pool.put].
  *
  * @author dorkbox, llc
@@ -29,14 +29,17 @@ import kotlinx.coroutines.runBlocking
 internal class SuspendingPool<T: Any>(
         private val poolObject: SuspendingPoolObject<T>,
         size: Int,
-        private val queue: SuspendingQueue<T>) : SuspendingPool<T> {
+        private val queue: SuspendingQueue<T>,
+        fillPool: Boolean) : SuspendingPool<T> {
 
     init {
-        runBlocking {
-            for (x in 0 until size) {
-                val e = newInstance()
-                poolObject.onReturn(e)
-                queue.offer(e)
+        if (fillPool) {
+            runBlocking {
+                for (x in 0 until size) {
+                    val e = newInstance()
+                    poolObject.onReturn(e)
+                    queue.offer(e)
+                }
             }
         }
     }
