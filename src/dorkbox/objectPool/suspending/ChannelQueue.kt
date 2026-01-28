@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 dorkbox, llc
+ * Copyright 2026 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,22 +25,22 @@ import kotlinx.coroutines.channels.trySendBlocking
 internal class ChannelQueue<E: Any>(size: Int): SuspendingQueue<E> {
     private val channel = Channel<E>(size)
 
-    override inline fun offer(element: E): Boolean {
+    override fun offer(element: E): Boolean {
         val result = channel.trySend(element)
         return result.isSuccess
     }
 
-    override inline fun remove(): E {
+    override fun remove(): E {
         val tryReceive = channel.tryReceive()
         return tryReceive.getOrNull() ?: throw NoSuchElementException("Channel is empty")
     }
 
-    override inline fun poll(): E? {
+    override fun poll(): E? {
         val tryReceive = channel.tryReceive()
         return tryReceive.getOrNull()
     }
 
-    override inline fun add(element: E): Boolean {
+    override fun add(element: E): Boolean {
         val result = channel.trySend(element)
         if (result.isSuccess) {
             return true
@@ -49,19 +49,19 @@ internal class ChannelQueue<E: Any>(size: Int): SuspendingQueue<E> {
         }
     }
 
-    override suspend inline fun put(element: E) {
+    override suspend fun put(element: E) {
         channel.send(element)
     }
 
-    override inline fun putBlocking(element: E) {
+    override fun putBlocking(element: E) {
         channel.trySendBlocking(element)
     }
 
-    override inline suspend fun take(): E {
+    override suspend fun take(): E {
         return channel.receive()
     }
 
-    override inline fun close() {
+    override fun close() {
         channel.close()
     }
 }
